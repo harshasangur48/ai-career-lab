@@ -1,0 +1,6 @@
+name = "aicareerlab"
+main = "src/worker.ts"
+compatibility_date = "2026-02-01"
+
+[assets]
+directory = "./dist"
