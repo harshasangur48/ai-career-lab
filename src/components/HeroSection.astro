@@ -1,0 +1,70 @@
+---
+import { useTranslations, getLocaleUrl, type Locales } from '../i18n/utils';
+import { SITE } from '../config/site';
+
+interface Props {
+  lang: Locales;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="hero">
+  <div class="container">
+    <div class="hero__inner">
+      <div class="hero__content">
+        <div class="hero__badge">
+          <span aria-hidden="true">🚀</span>
+          AI • Machine Learning • Python • Career
+        </div>
+
+        <h1 class="hero__headline">
+          <span class="accent">Learn AI.</span><br />
+          Build Projects.<br />
+          Grow Your Career.
+        </h1>
+
+        <p class="hero__subheadline">
+          {t('hero.subheadline')}
+        </p>
+
+        <div class="hero__actions">
+          <a href={getLocaleUrl(lang, '/ai-ml/')} class="btn btn--primary btn--lg">
+            {t('hero.cta.primary')} →
+          </a>
+          <a href={getLocaleUrl(lang, '/tutorials/')} class="btn btn--secondary btn--lg">
+            {t('hero.cta.secondary')}
+          </a>
+        </div>
+
+        <!-- Trust indicators -->
+        <div style="display:flex;flex-wrap:wrap;gap:var(--space-5);margin-top:var(--space-8);font-size:var(--text-sm);color:var(--color-text-muted);">
+          <span style="display:flex;align-items:center;gap:var(--space-2);">
+            <span style="color:var(--color-success);" aria-hidden="true">✓</span>
+            Free content
+          </span>
+          <span style="display:flex;align-items:center;gap:var(--space-2);">
+            <span style="color:var(--color-success);" aria-hidden="true">✓</span>
+            English, ಕನ್ನಡ, हिंदी
+          </span>
+          <span style="display:flex;align-items:center;gap:var(--space-2);">
+            <span style="color:var(--color-success);" aria-hidden="true">✓</span>
+            Practical guides
+          </span>
+        </div>
+      </div>
+
+      <div class="hero__image">
+        <img
+          src="/images/hero-illustration.jpg"
+          alt="Students learning AI and Machine Learning — code, models, and data"
+          width="600"
+          height="450"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </div>
+</div>

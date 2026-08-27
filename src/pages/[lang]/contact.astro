@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations, type Locales } from '../../i18n/utils';
+import { SITE } from '../../config/site';
+
+export async function getStaticPaths() {
+  return SITE.locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: Locales };
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  title={`${t('contact.title')} | ${SITE.name}`}
+  description="Get in touch with AI Career Lab — feedback, suggestions, collaboration, or questions."
+  lang={lang}
+  localePath="/contact/"
+>
+  <div class="container" style="max-width: var(--max-width-content); padding-top: var(--space-12); padding-bottom: var(--space-16);">
+    <h1 style="font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl)); font-weight: var(--font-extrabold); letter-spacing: -0.03em; margin-bottom: var(--space-4);">
+      {t('contact.title')}
+    </h1>
+    <p style="color: var(--color-text-muted); font-size: var(--text-lg); margin-bottom: var(--space-10);">
+      {lang === 'en' ? 'Have feedback, suggestions, or want to collaborate? We\'d love to hear from you.' : lang === 'kn' ? 'ಪ್ರತಿಕ್ರಿಯೆ, ಸಲಹೆ ಅಥವಾ ಸಹಯೋಗ ಬಯಸಿದ್ದರೆ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ.' : 'Feedback, सुझाव, या collaboration के लिए हमसे संपर्क करें।'}
+    </p>
+
+    <form
+      id="contact-form"
+      style="display:flex;flex-direction:column;gap:var(--space-5);max-width:36rem;"
+      novalidate
+    >
+      <div>
+        <label for="contact-name" style="display:block;font-size:var(--text-sm);font-weight:var(--font-semibold);margin-bottom:var(--space-2);">
+          {t('contact.name')} *
+        </label>
+        <input
+          type="text"
+          id="contact-name"
+          name="name"
+          required
+          autocomplete="name"
+          class="newsletter-form__input"
+          style="width:100%;"
+          placeholder={lang === 'en' ? 'Your full name' : lang === 'kn' ? 'ನಿಮ್ಮ ಹೆಸರು' : 'आपका नाम'}
+        />
+      </div>
+
+      <div>
+        <label for="contact-email" style="display:block;font-size:var(--text-sm);font-weight:var(--font-semibold);margin-bottom:var(--space-2);">
+          {t('contact.email')} *
+        </label>
+        <input
+          type="email"
+          id="contact-email"
+          name="email"
+          required
+          autocomplete="email"
+          class="newsletter-form__input"
+          style="width:100%;"
+          placeholder={lang === 'en' ? 'your@email.com' : 'your@email.com'}
+        />
+      </div>
+
+      <div>
+        <label for="contact-subject" style="display:block;font-size:var(--text-sm);font-weight:var(--font-semibold);margin-bottom:var(--space-2);">
+          {lang === 'en' ? 'Subject' : lang === 'kn' ? 'ವಿಷಯ' : 'विषय'}
+        </label>
+        <select id="contact-subject" name="subject" class="newsletter-form__input" style="width:100%;cursor:pointer;">
+          <option value="feedback">{lang === 'en' ? 'Content Feedback' : lang === 'kn' ? 'Content Feedback' : 'Content Feedback'}</option>
+          <option value="collaboration">Collaboration / Sponsorship</option>
+          <option value="correction">Correction / Error Report</option>
+          <option value="other">{lang === 'en' ? 'Other' : lang === 'kn' ? 'ಇತರೆ' : 'अन्य'}</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="contact-message" style="display:block;font-size:var(--text-sm);font-weight:var(--font-semibold);margin-bottom:var(--space-2);">
+          {t('contact.message')} *
+        </label>
+        <textarea
+          id="contact-message"
+          name="message"
+          required
+          rows="6"
+          class="newsletter-form__input"
+          style="width:100%;resize:vertical;"
+          placeholder={lang === 'en' ? 'Your message...' : lang === 'kn' ? 'ನಿಮ್ಮ ಸಂದೇಶ...' : 'आपका संदेश...'}
+        />
+      </div>
+
+      <button type="submit" class="btn btn--primary" style="align-self:flex-start;" id="contact-submit">
+        {t('contact.send')}
+      </button>
+
+      <p id="contact-status" aria-live="polite" style="font-size:var(--text-sm);"></p>
+    </form>
+
+    <div class="prose" style="margin-top: var(--space-12);">
+      <h2>{lang === 'en' ? 'Other Ways to Reach Us' : lang === 'kn' ? 'ಇತರ ಸಂಪರ್ಕ ವಿಧಾನಗಳು' : 'अन्य तरीके'}</h2>
+      <p>
+        {lang === 'en' ? 'You can also reach us on ' : lang === 'kn' ? 'ನೀವು ನಮ್ಮನ್ನು ' : 'आप हमें '}
+        <a href="https://x.com/aicareerlab" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+        {lang === 'en' ? ' or ' : lang === 'kn' ? ' ಮತ್ತು ' : ' या '}
+        <a href="https://linkedin.com/in/aicareerlab" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        {lang === 'en' ? '.' : lang === 'kn' ? ' ನಲ್ಲಿ ಸಂಪರ್ಕಿಸಬಹುದು.' : ' पर भी संपर्क कर सकते हैं।'}
+      </p>
+      <p style="color:var(--color-text-subtle);font-size:var(--text-sm);">
+        {lang === 'en' ? 'We typically respond within 2–3 business days.' : lang === 'kn' ? 'ನಾವು ಸಾಮಾನ್ಯವಾಗಿ 2–3 ವ್ಯಾಪಾರ ದಿನಗಳಲ್ಲಿ ಪ್ರತಿಕ್ರಿಯಿಸುತ್ತೇವೆ.' : 'हम आमतौर पर 2-3 business days में respond करते हैं।'}
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const status = document.getElementById('contact-status');
+    const submitBtn = document.getElementById('contact-submit');
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (submitBtn) { submitBtn.setAttribute('disabled', 'true'); submitBtn.textContent = 'Sending...'; }
+      setTimeout(() => {
+        if (status) { status.textContent = '✓ Message received! We\'ll respond within 2–3 business days. (Contact form not yet connected to backend)'; status.style.color = 'var(--color-success)'; }
+        if (submitBtn) { submitBtn.removeAttribute('disabled'); submitBtn.textContent = 'Send Message'; }
+        form.reset();
+      }, 800);
+    });
+  </script>
+</BaseLayout>

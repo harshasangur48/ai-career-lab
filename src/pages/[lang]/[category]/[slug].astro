@@ -1,0 +1,77 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+import { SITE, type CategorySlug } from '../../../config/site';
+import type { Locales } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const allArticles = await getCollection('articles', (entry) => !entry.data.draft);
+
+  return allArticles.map((article) => {
+    const lang = article.data.language as Locales;
+    const category = article.data.category;
+    const slug = article.data.slug;
+    return {
+      params: { lang, category, slug },
+      props: { article },
+    };
+  });
+}
+
+const { article } = Astro.props;
+const { lang, category } = Astro.params as { lang: Locales; category: CategorySlug; slug: string };
+
+// Astro 5 API: use render() from astro:content
+const { Content, headings } = await render(article);
+
+// Find related articles (same category, same lang, not this article)
+const allCategoryArticles = await getCollection('articles', (entry) =>
+  entry.data.language === lang &&
+  entry.data.category === category &&
+  entry.data.slug !== article.data.slug &&
+  !entry.data.draft
+);
+
+// Also find by translationGroup for cross-category related
+const translationGroupArticles = article.data.translationGroup
+  ? await getCollection('articles', (entry) =>
+      entry.data.language === lang &&
+      entry.data.translationGroup === article.data.translationGroup &&
+      entry.data.slug !== article.data.slug &&
+      !entry.data.draft
+    )
+  : [];
+
+// Combine and deduplicate
+const relatedSet = new Map();
+[...allCategoryArticles, ...translationGroupArticles].forEach((a) => {
+  if (!relatedSet.has(a.id)) relatedSet.set(a.id, a);
+});
+const related = Array.from(relatedSet.values())
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, 3);
+
+// Prev/Next articles in same category
+const categoryArticles = await getCollection('articles', (entry) =>
+  entry.data.language === lang &&
+  entry.data.category === category &&
+  !entry.data.draft
+);
+const sortedCategory = categoryArticles.sort(
+  (a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime()
+);
+const currentIndex = sortedCategory.findIndex((a) => a.data.slug === article.data.slug);
+const prevArticle = currentIndex > 0 ? sortedCategory[currentIndex - 1] : null;
+const nextArticle = currentIndex < sortedCategory.length - 1 ? sortedCategory[currentIndex + 1] : null;
+---
+
+<ArticleLayout
+  article={article}
+  lang={lang}
+  headings={headings}
+  related={related}
+  prevArticle={prevArticle}
+  nextArticle={nextArticle}
+>
+  <Content />
+</ArticleLayout>

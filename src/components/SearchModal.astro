@@ -1,0 +1,122 @@
+---
+import { useTranslations, type Locales } from '../i18n/utils';
+
+interface Props {
+  lang: Locales;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<!-- Search overlay -->
+<div
+  id="search-overlay"
+  class="search-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label={t('search.openSearch')}
+>
+  <div class="search-modal" role="search">
+    <!-- Search input header -->
+    <div class="search-modal__header">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="color:var(--color-text-subtle);flex-shrink:0;" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input
+        type="search"
+        id="search-input"
+        class="search-modal__input"
+        placeholder={t('search.placeholder')}
+        autocomplete="off"
+        spellcheck="false"
+        aria-label={t('search.placeholder')}
+      />
+      <button id="search-close" class="icon-btn" aria-label={t('search.close')}>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Results area -->
+    <div class="search-modal__body" id="search-results" role="listbox" aria-label="Search results">
+      <p style="color:var(--color-text-subtle);font-size:var(--text-sm);text-align:center;padding:var(--space-8);" id="search-hint">
+        Type to search articles, topics, and tools...
+        <br /><br />
+        <kbd style="padding:2px 8px;background:var(--color-bg-muted);border:1px solid var(--color-border);border-radius:var(--radius-sm);font-size:var(--text-xs);">Ctrl+K</kbd> to open anytime
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const searchResults = document.getElementById('search-results');
+  const searchHint = document.getElementById('search-hint');
+
+  let debounceTimer: ReturnType<typeof setTimeout>;
+  let pagefindInstance: any = null;
+
+  async function getPagefind() {
+    if (pagefindInstance) return pagefindInstance;
+    try {
+      // Dynamic evaluation prevents Vite dev server from trying to bundle non-existent dev file
+      const dynamicImport = new Function('url', 'return import(url)');
+      pagefindInstance = await dynamicImport('/pagefind/pagefind.js');
+      if (pagefindInstance && pagefindInstance.init) {
+        await pagefindInstance.init();
+      }
+      return pagefindInstance;
+    } catch {
+      return null;
+    }
+  }
+
+  async function performSearch(query: string) {
+    if (!searchResults) return;
+
+    if (!query || query.length < 2) {
+      if (searchHint) searchHint.style.display = 'block';
+      const existing = searchResults.querySelectorAll('.search-result-item, .search-message');
+      existing.forEach(el => el.remove());
+      return;
+    }
+
+    if (searchHint) searchHint.style.display = 'none';
+
+    const pf = await getPagefind();
+
+    if (pf) {
+      const { results } = await pf.search(query);
+      const data = await Promise.all(results.slice(0, 8).map((r: any) => r.data()));
+
+      searchResults.innerHTML = data.length === 0
+        ? `<p class="search-message" style="text-align:center;color:var(--color-text-subtle);padding:var(--space-8);">No results found for "${query}"</p>`
+        : data.map((r: any) => `
+          <a href="${r.url}" class="search-result-item" role="option">
+            <div>
+              <div class="search-result-item__title">${r.meta?.title || 'Article'}</div>
+              <div class="search-result-item__excerpt">${r.excerpt || ''}</div>
+            </div>
+          </a>
+        `).join('');
+    } else {
+      searchResults.innerHTML = `
+        <div class="search-message" style="padding:var(--space-6);">
+          <p style="color:var(--color-text-subtle);font-size:var(--text-sm);text-align:center;">
+            Search index is active in production builds.<br/>
+            Try browsing categories directly via the top navigation.
+          </p>
+        </div>
+      `;
+    }
+  }
+
+  searchInput?.addEventListener('input', (e) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      performSearch((e.target as HTMLInputElement).value.trim());
+    }, 250);
+  });
+</script>

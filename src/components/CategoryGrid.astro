@@ -1,0 +1,48 @@
+---
+import { useTranslations, getLocaleUrl, getCategoryLabel, type Locales } from '../i18n/utils';
+import { CATEGORIES, type CategorySlug } from '../config/site';
+
+interface Props {
+  lang: Locales;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Category article counts (will be dynamic once articles grow)
+const categoryCounts: Record<string, number> = {
+  'ai-ml': 3,
+  python: 2,
+  'ai-tools': 2,
+  projects: 2,
+  career: 1,
+  tutorials: 0,
+};
+---
+
+<section class="section" aria-labelledby="categories-title">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title" id="categories-title">{t('section.categories')}</h2>
+    </div>
+    <div class="categories-grid">
+      {Object.entries(CATEGORIES).map(([slug, cat]) => (
+        <a
+          href={getLocaleUrl(lang, `/${slug}/`)}
+          class="category-card"
+          aria-label={`${cat.label} — ${categoryCounts[slug] || 0} articles`}
+        >
+          <div
+            class="category-card__icon"
+            style={`background: ${cat.color}18; color: ${cat.color};`}
+            aria-hidden="true"
+          >
+            {cat.icon}
+          </div>
+          <span class="category-card__name">{getCategoryLabel(slug, lang, t)}</span>
+          <span class="category-card__count">{categoryCounts[slug] || 0} articles</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

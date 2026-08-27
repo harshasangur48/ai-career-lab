@@ -1,0 +1,248 @@
+---
+import { SITE, ANALYTICS, ADSENSE } from '../config/site';
+import { getAlternateUrls, getLangAttr, type Locales } from '../i18n/utils';
+import SEO from '../components/SEO.astro';
+import SchemaOrg from '../components/SchemaOrg.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SearchModal from '../components/SearchModal.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Locales;
+  canonicalUrl?: string;
+  ogImage?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  articleMeta?: {
+    publishedAt: Date;
+    updatedAt?: Date;
+    author: string;
+    category: string;
+    tags: string[];
+  };
+  localePath?: string; // path without locale prefix, e.g. "/python/roadmap/"
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description,
+  lang,
+  canonicalUrl,
+  ogImage,
+  ogTitle,
+  ogDescription,
+  articleMeta,
+  localePath = '/',
+  noIndex = false,
+} = Astro.props;
+
+const siteUrl = SITE.domain;
+const currentUrl = canonicalUrl || `${siteUrl}/${lang}${localePath === '/' ? '/' : localePath}`;
+const alternateUrls = getAlternateUrls(siteUrl, localePath);
+const langAttr = getLangAttr(lang);
+---
+
+<!doctype html>
+<html lang={langAttr} data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <SEO
+      title={title}
+      description={description}
+      canonicalUrl={currentUrl}
+      ogImage={ogImage}
+      ogTitle={ogTitle || title}
+      ogDescription={ogDescription || description}
+      lang={lang}
+      articleMeta={articleMeta}
+      noIndex={noIndex}
+    />
+
+    <!-- hreflang alternates -->
+    {alternateUrls.map(({ hreflang, url }) => (
+      <link rel="alternate" hreflang={hreflang} href={url} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}/en${localePath === '/' ? '/' : localePath}`} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Theme script — runs before render to avoid flash -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+
+    <!-- Google Analytics (disabled until ID is configured) -->
+    {ANALYTICS.googleAnalyticsId && (
+      <>
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS.googleAnalyticsId}`}
+        />
+        <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
+
+    <!-- Google Search Console verification -->
+    {ANALYTICS.searchConsoleVerification && (
+      <meta name="google-site-verification" content={ANALYTICS.searchConsoleVerification} />
+    )}
+
+    <!-- AdSense (disabled until publisher ID is configured) -->
+    {ADSENSE.enabled && ADSENSE.publisherId && (
+      <script
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE.publisherId}`}
+        crossorigin="anonymous"
+      />
+    )}
+
+    <SchemaOrg
+      type="website"
+      title={title}
+      description={description}
+      url={currentUrl}
+      lang={lang}
+    />
+  </head>
+
+  <body>
+    <a href="#main-content" class="sr-only" style="position:fixed;top:var(--space-2);left:var(--space-2);z-index:999;padding:var(--space-2) var(--space-4);background:var(--color-primary);color:white;border-radius:var(--radius-md);font-weight:var(--font-semibold);">
+      Skip to main content
+    </a>
+
+    <Header lang={lang} currentPath={localePath} />
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <Footer lang={lang} />
+
+    <SearchModal lang={lang} />
+
+    <!-- Code block copy buttons — injected after render -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Dark mode toggle
+        const toggleBtn = document.getElementById('theme-toggle');
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', () => {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            toggleBtn.setAttribute('aria-label', next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+          });
+        }
+
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileNav = document.getElementById('mobile-nav');
+        if (menuBtn && mobileNav) {
+          menuBtn.addEventListener('click', () => {
+            const isOpen = mobileNav.classList.toggle('is-open');
+            menuBtn.setAttribute('aria-expanded', String(isOpen));
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+          });
+          // Close on outside click
+          document.addEventListener('click', (e) => {
+            if (!menuBtn.contains(e.target) && !mobileNav.contains(e.target)) {
+              mobileNav.classList.remove('is-open');
+              menuBtn.setAttribute('aria-expanded', 'false');
+              document.body.style.overflow = '';
+            }
+          });
+          // Close on Escape
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) {
+              mobileNav.classList.remove('is-open');
+              menuBtn.setAttribute('aria-expanded', 'false');
+              document.body.style.overflow = '';
+              menuBtn.focus();
+            }
+          });
+        }
+
+        // Search modal toggle
+        const searchBtn = document.getElementById('search-btn');
+        const searchOverlay = document.getElementById('search-overlay');
+        const searchClose = document.getElementById('search-close');
+        const searchInput = document.getElementById('search-input');
+
+        function openSearch() {
+          searchOverlay?.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+          setTimeout(() => searchInput?.focus(), 100);
+        }
+        function closeSearch() {
+          searchOverlay?.classList.remove('is-open');
+          document.body.style.overflow = '';
+        }
+
+        searchBtn?.addEventListener('click', openSearch);
+        searchClose?.addEventListener('click', closeSearch);
+        searchOverlay?.addEventListener('click', (e) => {
+          if (e.target === searchOverlay) closeSearch();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'k' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); openSearch(); }
+          if (e.key === 'Escape') closeSearch();
+        });
+
+        // Code copy buttons
+        document.querySelectorAll('pre').forEach((pre) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'code-wrapper';
+          pre.parentNode?.insertBefore(wrapper, pre);
+          wrapper.appendChild(pre);
+
+          const btn = document.createElement('button');
+          btn.className = 'copy-code-btn';
+          btn.textContent = 'Copy';
+          btn.setAttribute('aria-label', 'Copy code to clipboard');
+          wrapper.appendChild(btn);
+
+          btn.addEventListener('click', async () => {
+            const code = pre.querySelector('code')?.textContent || pre.textContent || '';
+            try {
+              await navigator.clipboard.writeText(code);
+              btn.textContent = 'Copied!';
+              btn.classList.add('copied');
+              setTimeout(() => {
+                btn.textContent = 'Copy';
+                btn.classList.remove('copied');
+              }, 2000);
+            } catch {
+              btn.textContent = 'Failed';
+              setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

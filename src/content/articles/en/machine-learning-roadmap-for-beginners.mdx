@@ -1,0 +1,244 @@
+---
+title: "Machine Learning Roadmap for Beginners in 2026"
+description: "A complete, structured roadmap for students and freshers who want to learn Machine Learning step by step — from zero to job-ready."
+slug: "machine-learning-roadmap-for-beginners"
+language: "en"
+category: "ai-ml"
+tags: ["machine learning", "roadmap", "beginners", "AI career", "data science"]
+author: "Harsha"
+publishedAt: 2026-02-01
+featuredImage: "/images/articles/ml-roadmap.jpg"
+featuredImageAlt: "Machine Learning learning roadmap diagram"
+readingTime: 12
+featured: true
+translationGroup: "ml-roadmap-001"
+---
+
+Machine Learning is one of the most in-demand skills in the technology industry today. But with so much content available online, knowing *what* to learn and *in what order* is the hardest part.
+
+This roadmap solves that problem. It's structured for complete beginners with no prior ML experience — but it goes deep enough to get you job-ready.
+
+## Phase 1: Foundations (Months 1–2)
+
+### 1.1 Python Programming
+
+Everything in ML is written in Python. You need to be comfortable with:
+
+- Data types: strings, integers, floats, booleans
+- Data structures: lists, tuples, dictionaries, sets
+- Control flow: if/else, for loops, while loops
+- Functions and scope
+- Object-Oriented Programming basics
+- File I/O and working with JSON/CSV
+
+**Goal**: Write Python programs confidently without constantly Googling basic syntax.
+
+### 1.2 Mathematics for ML
+
+Focus on these three areas:
+
+**Linear Algebra**
+- Scalars, vectors, matrices
+- Matrix multiplication
+- Dot products
+- Transpose and inverse
+
+**Statistics & Probability**
+- Mean, median, mode, standard deviation
+- Probability basics
+- Normal distribution
+- Correlation and covariance
+
+**Calculus (Conceptual)**
+- What a derivative means (rate of change)
+- Gradient descent — the core learning algorithm in ML
+- Chain rule (used in backpropagation)
+
+> You don't need to solve calculus exam problems. You need to understand *what* gradient descent is doing when it trains a model.
+
+## Phase 2: Core ML Concepts (Month 3)
+
+### 2.1 The ML Workflow
+
+Every ML project follows this pipeline:
+
+```
+Data Collection → Data Cleaning → Feature Engineering → 
+Model Selection → Training → Evaluation → Deployment
+```
+
+Learn each step. Don't skip data cleaning — in real projects, 60–70% of your time goes here.
+
+### 2.2 Types of Learning
+
+| Type | Description | Example |
+|------|-------------|---------|
+| Supervised | Labelled training data | Email spam detection |
+| Unsupervised | No labels, find patterns | Customer segmentation |
+| Reinforcement | Learn from rewards/penalties | Game-playing AI |
+| Semi-supervised | Mix of labelled + unlabelled | Medical image analysis |
+
+### 2.3 Key Algorithms to Know
+
+**Regression** (predicting numbers):
+- Linear Regression
+- Polynomial Regression
+- Ridge & Lasso Regression
+
+**Classification** (predicting categories):
+- Logistic Regression
+- Decision Trees
+- Random Forests
+- Support Vector Machines (SVM)
+- K-Nearest Neighbours (KNN)
+
+**Clustering** (grouping unlabelled data):
+- K-Means
+- DBSCAN
+- Hierarchical Clustering
+
+**Dimensionality Reduction**:
+- Principal Component Analysis (PCA)
+
+### 2.4 Model Evaluation
+
+Learn these metrics — they tell you *how well* your model actually works:
+
+```python
+from sklearn.metrics import (
+    accuracy_score,      # Classification
+    precision_score,     # Avoid false positives
+    recall_score,        # Avoid false negatives
+    f1_score,            # Balance of precision + recall
+    mean_squared_error,  # Regression
+    r2_score             # How well model fits data
+)
+```
+
+## Phase 3: Python ML Libraries (Month 4)
+
+### NumPy — Numerical Computing
+
+```python
+import numpy as np
+
+# Arrays
+arr = np.array([1, 2, 3, 4, 5])
+matrix = np.zeros((3, 3))
+
+# Mathematical operations
+print(arr.mean(), arr.std(), arr.max())
+```
+
+### Pandas — Data Manipulation
+
+```python
+import pandas as pd
+
+# Load data
+df = pd.read_csv('dataset.csv')
+
+# Explore
+print(df.head())
+print(df.describe())
+print(df.isnull().sum())
+
+# Clean
+df = df.dropna()
+df['column'] = df['column'].fillna(df['column'].mean())
+```
+
+### Matplotlib & Seaborn — Visualisation
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Distribution plot
+sns.histplot(df['age'], kde=True)
+plt.show()
+
+# Correlation heatmap
+sns.heatmap(df.corr(), annot=True)
+plt.show()
+```
+
+### scikit-learn — Machine Learning
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train model
+model = RandomForestClassifier(n_estimators=100)
+model.fit(X_train, y_train)
+
+# Evaluate
+predictions = model.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, predictions):.2%}")
+```
+
+## Phase 4: Projects (Month 4–5)
+
+Build these projects in this order:
+
+1. **Iris Flower Classification** — classic beginner project
+2. **Titanic Survival Prediction** — data cleaning practice
+3. **House Price Prediction** — regression
+4. **Customer Churn Prediction** — business use case
+5. **Sentiment Analysis** — text classification
+
+Each project should be published on GitHub with a clear README.
+
+## Phase 5: Deep Learning (Month 5–6)
+
+Once you're comfortable with classical ML, move to Deep Learning:
+
+- **Neural Networks** — how they work (neurons, layers, weights)
+- **Backpropagation** — how networks learn
+- **Activation Functions** — ReLU, Sigmoid, Softmax
+- **CNN** — for image data
+- **RNN / LSTM** — for sequential data
+
+Use **TensorFlow/Keras** (beginner-friendly) or **PyTorch** (industry standard).
+
+## Phase 6: Specialisation & Job Readiness (Month 6+)
+
+Choose one specialisation based on interest:
+
+- **NLP** — language models, transformers, text analysis
+- **Computer Vision** — image recognition, object detection
+- **Generative AI** — diffusion models, LLMs, fine-tuning
+- **MLOps** — deploying and monitoring models in production
+
+## Essential Tools to Learn
+
+| Tool | Purpose |
+|------|---------|
+| Jupyter Notebook / VS Code | Writing and running code |
+| Git + GitHub | Version control, portfolio |
+| Kaggle | Datasets, competitions |
+| Hugging Face | Pre-trained models |
+| Google Colab | Free GPU for training |
+
+## Final Roadmap Overview
+
+```
+Month 1:   Python + Maths
+Month 2:   Core ML theory
+Month 3:   NumPy, Pandas, Matplotlib
+Month 4:   scikit-learn + 3 projects
+Month 5:   Deep Learning basics
+Month 6:   Specialisation + portfolio
+Month 7+:  Job applications
+```
+
+This roadmap is a guide, not a rigid rule. Move faster or slower depending on your background. The important thing is to keep building.
+
+Good luck. You've got this.

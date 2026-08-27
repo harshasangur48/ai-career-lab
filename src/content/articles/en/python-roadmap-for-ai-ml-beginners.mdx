@@ -1,0 +1,293 @@
+---
+title: "Python Roadmap for AI/ML Beginners in 2026"
+description: "The exact Python topics you need to learn for AI and Machine Learning — with a clear timeline and resources for students and beginners."
+slug: "python-roadmap-for-ai-ml-beginners"
+language: "en"
+category: "python"
+tags: ["Python", "AI", "machine learning", "beginners", "roadmap", "programming"]
+author: "Harsha"
+publishedAt: 2026-03-05
+featuredImage: "/images/articles/python-roadmap.jpg"
+featuredImageAlt: "Python programming for AI/ML beginners"
+readingTime: 9
+featured: false
+translationGroup: "python-roadmap-001"
+---
+
+Python is the language of AI. Every major ML framework — TensorFlow, PyTorch, scikit-learn, Hugging Face — is Python-first.
+
+But Python is also a general-purpose language with a *lot* of features. If you try to learn everything, you'll spend months before writing your first ML model.
+
+This roadmap is designed for people who want to learn **exactly the Python you need for AI and ML** — nothing more, nothing less.
+
+## Stage 1: Python Fundamentals (Weeks 1–3)
+
+These are non-negotiable. Master these before touching ML.
+
+### Variables and Data Types
+
+```python
+# Basic types
+name = "AI Career Lab"      # string
+age = 22                    # integer
+gpa = 8.5                   # float
+is_student = True           # boolean
+
+# Type checking
+print(type(name))           # <class 'str'>
+print(type(age))            # <class 'int'>
+```
+
+### Data Structures
+
+```python
+# List — ordered, mutable
+skills = ["Python", "NumPy", "Pandas", "scikit-learn"]
+skills.append("TensorFlow")
+print(skills[0])            # Python
+
+# Dictionary — key-value pairs
+student = {
+    "name": "Rahul",
+    "branch": "CSE",
+    "year": 3
+}
+print(student["name"])      # Rahul
+
+# Tuple — ordered, immutable
+coordinates = (12.9716, 77.5946)  # Bangalore coordinates
+
+# Set — unordered, unique elements
+unique_tags = {"AI", "ML", "Python", "AI"}  # "AI" appears once
+```
+
+### Functions
+
+```python
+def calculate_accuracy(correct, total):
+    """Calculate model accuracy as a percentage."""
+    if total == 0:
+        return 0
+    return (correct / total) * 100
+
+accuracy = calculate_accuracy(87, 100)
+print(f"Model accuracy: {accuracy:.1f}%")  # Model accuracy: 87.0%
+```
+
+### List Comprehensions (Very Common in ML Code)
+
+```python
+# Traditional way
+squares = []
+for i in range(10):
+    squares.append(i ** 2)
+
+# List comprehension — much more common in ML code
+squares = [i ** 2 for i in range(10)]
+
+# Filter with condition
+even_squares = [i ** 2 for i in range(10) if i % 2 == 0]
+```
+
+## Stage 2: Intermediate Python (Weeks 4–5)
+
+### Working with Files and Data
+
+```python
+import csv
+import json
+
+# Reading a CSV file
+with open('data.csv', 'r') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(row)
+
+# Reading JSON
+with open('config.json', 'r') as f:
+    config = json.load(f)
+    print(config['model_name'])
+```
+
+### Error Handling
+
+```python
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+except Exception as e:
+    print(f"Unexpected error: {e}")
+finally:
+    print("This always runs")
+```
+
+### Object-Oriented Programming (OOP)
+
+```python
+class MLModel:
+    def __init__(self, model_name, version):
+        self.model_name = model_name
+        self.version = version
+        self.is_trained = False
+
+    def train(self, data):
+        # Training logic here
+        self.is_trained = True
+        print(f"{self.model_name} trained successfully!")
+
+    def predict(self, input_data):
+        if not self.is_trained:
+            raise ValueError("Model must be trained before predicting!")
+        # Prediction logic
+        return "prediction"
+
+# Usage
+model = MLModel("RandomForest", "1.0")
+model.train(training_data)
+```
+
+## Stage 3: Python for Data Science (Weeks 6–7)
+
+### NumPy — The Foundation of ML
+
+NumPy arrays are the data structure that feeds into every ML model.
+
+```python
+import numpy as np
+
+# Creating arrays
+arr = np.array([1, 2, 3, 4, 5])
+matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+# Operations
+print(arr.shape)      # (5,)
+print(matrix.shape)   # (3, 3)
+
+# Mathematical operations (vectorised — very fast)
+print(arr * 2)        # [2 4 6 8 10]
+print(arr.mean())     # 3.0
+print(arr.std())      # 1.41...
+
+# Matrix multiplication (fundamental to neural networks)
+A = np.random.randn(3, 4)
+B = np.random.randn(4, 5)
+C = np.dot(A, B)      # Result shape: (3, 5)
+```
+
+### Pandas — Data Manipulation
+
+```python
+import pandas as pd
+
+# Load data
+df = pd.read_csv('student_data.csv')
+
+# Basic exploration
+print(df.shape)           # (rows, columns)
+print(df.head())          # First 5 rows
+print(df.info())          # Column types and missing values
+print(df.describe())      # Statistics
+
+# Filtering
+high_scorers = df[df['score'] > 85]
+
+# Handling missing values
+df['age'].fillna(df['age'].mean(), inplace=True)
+df.dropna(subset=['score'], inplace=True)
+
+# Grouping and aggregating
+avg_by_branch = df.groupby('branch')['score'].mean()
+```
+
+### Matplotlib — Visualisation
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Line plot
+plt.figure(figsize=(10, 6))
+plt.plot(epochs, training_loss, label='Training Loss')
+plt.plot(epochs, val_loss, label='Validation Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Model Training Progress')
+plt.legend()
+plt.show()
+
+# Distribution
+sns.histplot(df['score'], kde=True, color='steelblue')
+plt.title('Score Distribution')
+plt.show()
+```
+
+## Stage 4: scikit-learn — Your First ML Library (Week 8)
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+
+# 1. Prepare data
+X = df.drop('target', axis=1)   # Features
+y = df['target']                  # Labels
+
+# 2. Split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# 3. Scale features
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# 4. Train
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# 5. Evaluate
+y_pred = model.predict(X_test)
+print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+```
+
+## What You Don't Need to Learn (Right Now)
+
+Skip these for now — they're not needed for AI/ML beginners:
+
+- Django / Flask web development
+- Advanced database programming
+- Multithreading and multiprocessing
+- Metaclasses and advanced OOP
+- System programming
+
+Learn them if a specific project requires it, not upfront.
+
+## Recommended Resources
+
+| Resource | Type | Cost |
+|----------|------|------|
+| Python.org official tutorial | Text | Free |
+| freeCodeCamp Python course | Video | Free |
+| CS50P (Harvard) | Course | Free |
+| Kaggle Python course | Interactive | Free |
+| Python Crash Course (book) | Book | Paid |
+
+## 8-Week Learning Plan
+
+| Week | Focus |
+|------|-------|
+| 1–2 | Variables, data types, control flow, functions |
+| 3 | Data structures, list comprehensions |
+| 4 | File I/O, error handling, OOP basics |
+| 5 | Practice — solve 20 Python problems on HackerRank |
+| 6 | NumPy + Pandas |
+| 7 | Matplotlib + Seaborn |
+| 8 | scikit-learn — build your first ML model |
+
+Python is a tool. The goal isn't to master every Python feature — it's to use Python confidently enough to focus on the Machine Learning concepts underneath.
+
+Get to the ML as fast as possible. You'll fill in Python gaps as you go.

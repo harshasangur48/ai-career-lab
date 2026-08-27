@@ -1,0 +1,287 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import SocialShare from '../components/SocialShare.astro';
+import AuthorBox from '../components/AuthorBox.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+import AdSlot from '../components/AdSlot.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import SchemaOrg from '../components/SchemaOrg.astro';
+import { useTranslations, formatDate, getLocaleUrl, type Locales } from '../i18n/utils';
+import { SITE, CATEGORIES, type CategorySlug } from '../config/site';
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+  lang: Locales;
+  headings: { depth: number; slug: string; text: string }[];
+  related: CollectionEntry<'articles'>[];
+  prevArticle?: CollectionEntry<'articles'> | null;
+  nextArticle?: CollectionEntry<'articles'> | null;
+}
+
+const { article, lang, headings, related, prevArticle, nextArticle } = Astro.props;
+const t = useTranslations(lang);
+const { data } = article;
+
+const category = CATEGORIES[data.category as CategorySlug];
+const publishedDate = formatDate(data.publishedAt, lang);
+const updatedDate = data.updatedAt ? formatDate(data.updatedAt, lang) : null;
+
+const articleUrl = `${SITE.domain}/${lang}/${data.category}/${data.slug}/`;
+const localePath = `/${data.category}/${data.slug}/`;
+
+const breadcrumbs = [
+  { label: t('breadcrumb.home'), href: getLocaleUrl(lang, '/') },
+  { label: category.label, href: getLocaleUrl(lang, `/${data.category}/`) },
+  { label: data.title, href: articleUrl, current: true },
+];
+---
+
+<BaseLayout
+  title={data.seoTitle || data.title}
+  description={data.seoDescription || data.description}
+  lang={lang}
+  canonicalUrl={data.canonicalUrl || articleUrl}
+  ogImage={data.ogImage || data.featuredImage}
+  ogTitle={data.ogTitle || data.title}
+  ogDescription={data.ogDescription || data.description}
+  localePath={localePath}
+  articleMeta={{
+    publishedAt: data.publishedAt,
+    updatedAt: data.updatedAt,
+    author: data.author,
+    category: data.category,
+    tags: data.tags,
+  }}
+>
+  <!-- Article schema -->
+  <SchemaOrg
+    slot="head"
+    type="article"
+    title={data.title}
+    description={data.description}
+    url={articleUrl}
+    lang={lang}
+    image={data.featuredImage}
+    authorName={data.author}
+    publishedAt={data.publishedAt}
+    updatedAt={data.updatedAt}
+    categoryName={category.label}
+  />
+
+  <!-- In-content ad slot (top of page) -->
+  <div class="container" style="padding-top: var(--space-4);">
+    <AdSlot slot="header-banner" label={t('ad.label')} />
+  </div>
+
+  <div class="container">
+    <Breadcrumbs items={breadcrumbs} lang={lang} />
+  </div>
+
+  <div class="container">
+    <div class="article-layout">
+      <!-- Main content -->
+      <article class="article-main">
+        <!-- Article header -->
+        <header class="article-header">
+          <div class="article-header__category">
+            <a
+              href={getLocaleUrl(lang, `/${data.category}/`)}
+              class={`category-badge category-badge--${data.category}`}
+            >
+              {category.icon} {category.labelShort}
+            </a>
+          </div>
+
+          <h1 class="article-header__title">{data.title}</h1>
+
+          <p class="article-header__intro">{data.description}</p>
+
+          <div class="article-header__meta">
+            <div class="article-header__author">
+              <img
+                src="/images/author-harsha.jpg"
+                alt={data.author}
+                class="article-header__author-avatar"
+                width="40"
+                height="40"
+                loading="lazy"
+              />
+              <div>
+                <div class="article-header__author-name">{data.author}</div>
+                <div class="article-header__author-label">{t('author.writtenBy')}</div>
+              </div>
+            </div>
+
+            <time datetime={data.publishedAt.toISOString()}>
+              {t('article.publishedOn')} {publishedDate}
+            </time>
+
+            {updatedDate && (
+              <time datetime={data.updatedAt?.toISOString()}>
+                {t('article.updatedOn')} {updatedDate}
+              </time>
+            )}
+
+            <span class="reading-time">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              {data.readingTime} {t('article.readingTime')}
+            </span>
+          </div>
+
+          {data.featuredImage && (
+            <figure class="article-header__featured-image">
+              <img
+                src={data.featuredImage}
+                alt={data.featuredImageAlt || data.title}
+                width="800"
+                height="450"
+                loading="eager"
+                decoding="async"
+              />
+              {data.featuredImageAlt && (
+                <figcaption>{data.featuredImageAlt}</figcaption>
+              )}
+            </figure>
+          )}
+        </header>
+
+        <!-- Mobile TOC (collapsible) -->
+        {headings.length > 2 && (
+          <TableOfContents headings={headings} lang={lang} mobile />
+        )}
+
+        <!-- Mid-article ad slot -->
+        <AdSlot label={t('ad.label')} style="margin-bottom: var(--space-6);" />
+
+        <!-- Article prose content -->
+        <div class="prose">
+          <slot />
+        </div>
+
+        <!-- Tags -->
+        {data.tags.length > 0 && (
+          <div style="margin-top: var(--space-8);">
+            <p style="font-size: var(--text-sm); font-weight: var(--font-semibold); color: var(--color-text-muted); margin-bottom: var(--space-3);">
+              {t('article.tags')}
+            </p>
+            <div class="tags-list">
+              {data.tags.map((tag) => (
+                <span class="tag-pill">{tag}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <!-- Social share -->
+        <SocialShare
+          url={articleUrl}
+          title={data.title}
+          description={data.description}
+          lang={lang}
+        />
+
+        <!-- After-article ad slot -->
+        <AdSlot label={t('ad.label')} />
+
+        <!-- Author box -->
+        <AuthorBox lang={lang} />
+
+        <!-- Prev/Next navigation -->
+        {(prevArticle || nextArticle) && (
+          <nav class="article-nav" aria-label="Article navigation" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-top:var(--space-8);">
+            {prevArticle ? (
+              <a
+                href={getLocaleUrl(lang, `/${prevArticle.data.category}/${prevArticle.data.slug}/`)}
+                class="article-card"
+                style="padding: var(--space-4); text-decoration: none;"
+              >
+                <p style="font-size: var(--text-xs); color: var(--color-text-subtle); margin-bottom: var(--space-2);">← {t('article.prevArticle')}</p>
+                <p style="font-size: var(--text-sm); font-weight: var(--font-semibold); color: var(--color-text);">{prevArticle.data.title}</p>
+              </a>
+            ) : <div />}
+            {nextArticle ? (
+              <a
+                href={getLocaleUrl(lang, `/${nextArticle.data.category}/${nextArticle.data.slug}/`)}
+                class="article-card"
+                style="padding: var(--space-4); text-align: right; text-decoration: none;"
+              >
+                <p style="font-size: var(--text-xs); color: var(--color-text-subtle); margin-bottom: var(--space-2);">{t('article.nextArticle')} →</p>
+                <p style="font-size: var(--text-sm); font-weight: var(--font-semibold); color: var(--color-text);">{nextArticle.data.title}</p>
+              </a>
+            ) : <div />}
+          </nav>
+        )}
+
+        <!-- Comments placeholder -->
+        <div id="comments" style="margin-top: var(--space-10); padding: var(--space-8); background: var(--color-bg-subtle); border: 1px solid var(--color-border); border-radius: var(--radius-xl); text-align: center;">
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+            💬 Comments coming soon — connect via the social links above to share your thoughts.
+          </p>
+        </div>
+
+        <!-- Newsletter CTA -->
+        <NewsletterSignup lang={lang} />
+      </article>
+
+      <!-- Desktop sidebar -->
+      <aside class="article-sidebar">
+        {headings.length > 2 && (
+          <TableOfContents headings={headings} lang={lang} />
+        )}
+
+        <!-- Sidebar ad -->
+        <div style="margin-top: var(--space-6);">
+          <AdSlot variant="sidebar" label={t('ad.label')} />
+        </div>
+      </aside>
+    </div>
+
+    <!-- Related articles -->
+    {related.length > 0 && (
+      <section style="margin-top: var(--space-16); padding-top: var(--space-8); border-top: 1px solid var(--color-border);">
+        <h2 class="section__title" style="margin-bottom: var(--space-8);">{t('section.related')}</h2>
+        <div class="cards-grid">
+          {related.slice(0, 3).map((rel) => (
+            <ArticleCard article={rel} lang={lang} />
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<!-- TOC scroll-spy script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tocLinks = document.querySelectorAll('.toc__link');
+    if (!tocLinks.length) return;
+
+    const headings = Array.from(
+      document.querySelectorAll('.prose h2[id], .prose h3[id]')
+    ) as HTMLElement[];
+
+    function updateActiveTocLink() {
+      const scrollY = window.scrollY + 120;
+      let current = headings[0];
+
+      for (const h of headings) {
+        if (h.offsetTop <= scrollY) current = h;
+      }
+
+      tocLinks.forEach((link) => {
+        link.classList.remove('is-active');
+        if (link.getAttribute('href') === `#${current?.id}`) {
+          link.classList.add('is-active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink, { passive: true });
+    updateActiveTocLink();
+  });
+</script>

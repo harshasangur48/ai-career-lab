@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations, getLocaleUrl, type Locales } from '../../i18n/utils';
+import { SITE, AUTHOR } from '../../config/site';
+
+export async function getStaticPaths() {
+  return SITE.locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locales };
+const t = useTranslations(lang);
+
+const titles = { en: 'About AI Career Lab', kn: 'AI Career Lab ಬಗ್ಗೆ', hi: 'AI Career Lab के बारे में' };
+const title = `${titles[lang]} | ${SITE.name}`;
+const description = {
+  en: 'AI Career Lab is a multilingual technology publication focused on AI, Machine Learning, Python, and career development for students and aspiring developers in India and worldwide.',
+  kn: 'AI Career Lab ಒಂದು ಬಹುಭಾಷಾ technology publication — ವಿದ್ಯಾರ್ಥಿಗಳು ಮತ್ತು ಆಕಾಂಕ್ಷಿ developers ಗಾಗಿ AI, ML, Python ಮತ್ತು ಕೆರಿಯರ್ ಮಾಹಿತಿ.',
+  hi: 'AI Career Lab एक multilingual technology publication है — छात्रों और नए developers के लिए AI, ML, Python और career की जानकारी।',
+}[lang];
+---
+
+<BaseLayout title={title} description={description} lang={lang} localePath="/about/">
+  <div class="container" style="max-width: var(--max-width-content); padding-top: var(--space-12); padding-bottom: var(--space-16);">
+    <h1 style="font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl)); font-weight: var(--font-extrabold); letter-spacing: -0.03em; margin-bottom: var(--space-6);">
+      {lang === 'en' ? 'About AI Career Lab' : lang === 'kn' ? 'AI Career Lab ಬಗ್ಗೆ' : 'AI Career Lab के बारे में'}
+    </h1>
+
+    <div class="prose">
+      {lang === 'en' ? (
+        <>
+          <p>
+            <strong>AI Career Lab</strong> is a multilingual technology publication dedicated to helping students,
+            freshers, and aspiring developers in India and worldwide build careers in AI, Machine Learning, and technology.
+          </p>
+
+          <h2>Our Mission</h2>
+          <p>
+            We believe that quality AI education should be accessible to everyone — regardless of language,
+            geography, or financial background. Our content is available in English, Kannada, and Hindi,
+            with a focus on practical, actionable guides that actually help people get jobs and build projects.
+          </p>
+
+          <h2>What We Cover</h2>
+          <ul>
+            <li>AI & Machine Learning — from fundamentals to advanced topics</li>
+            <li>Python & Programming — practical coding guides</li>
+            <li>AI Tools — honest reviews and tutorials</li>
+            <li>Projects — step-by-step build guides for your portfolio</li>
+            <li>Career — resumes, interviews, roadmaps, and job preparation</li>
+            <li>Tutorials — practical how-to guides</li>
+          </ul>
+
+          <h2>Our Values</h2>
+          <ul>
+            <li><strong>Honest content</strong> — no clickbait, no hype</li>
+            <li><strong>Practical focus</strong> — guides you can actually follow</li>
+            <li><strong>Accessible language</strong> — clear, simple writing</li>
+            <li><strong>No paywalls</strong> — all core content is free</li>
+          </ul>
+
+          <h2>About the Author</h2>
+          <p>
+            AI Career Lab is created and maintained by <strong>Harsha</strong> — an AI/ML enthusiast and
+            technology learner who shares practical guides, project tutorials, tool reviews, and career
+            resources for the Indian student community.
+          </p>
+
+          <h2>Contact</h2>
+          <p>
+            Have feedback, suggestions, or want to collaborate? Visit our <a href={getLocaleUrl(lang, '/contact/')}>contact page</a>.
+          </p>
+        </>
+      ) : lang === 'kn' ? (
+        <>
+          <p>
+            <strong>AI Career Lab</strong> ಒಂದು ಬಹುಭಾಷಾ technology publication — ಭಾರತ ಮತ್ತು ಜಗತ್ತಿನಾದ್ಯಂತ ವಿದ್ಯಾರ್ಥಿಗಳು,
+            freshers ಮತ್ತು ಆಕಾಂಕ್ಷಿ developers ಗೆ AI, Machine Learning ಮತ್ತು technology ಕೆರಿಯರ್ ನಿರ್ಮಿಸಲು ಸಹಾಯ ಮಾಡಲು ಮೀಸಲಾಗಿದೆ.
+          </p>
+
+          <h2>ನಮ್ಮ ಧ್ಯೇಯ</h2>
+          <p>
+            ಗುಣಮಟ್ಟದ AI ಶಿಕ್ಷಣ ಎಲ್ಲರಿಗೂ ಲಭ್ಯವಾಗಬೇಕು — ಭಾಷೆ, ಸ್ಥಳ ಅಥವಾ ಆರ್ಥಿಕ ಹಿನ್ನೆಲೆ ಏನೇ ಇರಲಿ.
+            ನಮ್ಮ content English, Kannada ಮತ್ತು Hindi ನಲ್ಲಿ ಲಭ್ಯ.
+          </p>
+
+          <h2>ಲೇಖಕರ ಬಗ್ಗೆ</h2>
+          <p>
+            AI Career Lab ಅನ್ನು <strong>Harsha</strong> ರಚಿಸಿ ನಿರ್ವಹಿಸುತ್ತಾರೆ — AI/ML ಉತ್ಸಾಹಿ ಮತ್ತು technology ಕಲಿಯುವವರು.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            <strong>AI Career Lab</strong> एक multilingual technology publication है — भारत और दुनिया भर के छात्रों,
+            freshers और नए developers को AI, Machine Learning और technology career बनाने में मदद के लिए समर्पित।
+          </p>
+
+          <h2>हमारा मिशन</h2>
+          <p>
+            हम मानते हैं कि quality AI education सबके लिए accessible होनी चाहिए — भाषा, जगह या आर्थिक background चाहे जो भी हो।
+            हमारा content English, Kannada और Hindi में उपलब्ध है।
+          </p>
+
+          <h2>लेखक के बारे में</h2>
+          <p>
+            AI Career Lab को <strong>Harsha</strong> बनाते और manage करते हैं — एक AI/ML enthusiast और technology learner।
+          </p>
+        </>
+      )}
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,351 @@
+---
+title: "10 AI/ML Projects to Build for Your Resume as a Fresher"
+description: "Ten impressive AI and Machine Learning projects that freshers and students can build, publish on GitHub, and add to their resume to get noticed by recruiters."
+slug: "ai-ml-projects-for-your-resume"
+language: "en"
+category: "projects"
+tags: ["AI projects", "machine learning", "resume", "freshers", "portfolio", "GitHub", "job hunting"]
+author: "Harsha"
+publishedAt: 2026-05-01
+featuredImage: "/images/articles/ai-ml-projects.jpg"
+featuredImageAlt: "AI/ML projects for resume"
+readingTime: 11
+featured: true
+translationGroup: "ai-ml-projects-001"
+---
+
+Recruiters hiring for AI/ML roles don't just want degrees. They want evidence that you can build things.
+
+A well-documented GitHub project is worth more than a semester's worth of coursework on your resume. These 10 projects are chosen because they:
+
+1. Teach real AI/ML skills
+2. Solve problems people actually care about
+3. Are achievable without a GPU or paid APIs (mostly)
+4. Look impressive in a resume or portfolio
+
+---
+
+## Beginner Projects (3–5 days each)
+
+### 1. Movie Recommendation System
+
+**Skills**: Collaborative filtering, cosine similarity, Pandas
+
+Build a system that recommends movies based on user preferences using the MovieLens dataset (free, from GroupLens).
+
+```python
+from sklearn.metrics.pairwise import cosine_similarity
+import pandas as pd
+
+def get_recommendations(movie_title, ratings_df, n=10):
+    """Get top N movie recommendations similar to the input movie."""
+    # Create user-movie matrix
+    movie_matrix = ratings_df.pivot_table(
+        index='userId', 
+        columns='title', 
+        values='rating'
+    ).fillna(0)
+    
+    # Calculate similarity
+    similarity = cosine_similarity(movie_matrix.T)
+    sim_df = pd.DataFrame(similarity, 
+                          index=movie_matrix.columns, 
+                          columns=movie_matrix.columns)
+    
+    # Get similar movies
+    similar_movies = sim_df[movie_title].sort_values(ascending=False)[1:n+1]
+    return similar_movies
+
+recommendations = get_recommendations("The Dark Knight")
+print(recommendations)
+```
+
+**Resume talking point**: "Built a collaborative filtering recommendation engine using cosine similarity on the MovieLens dataset, achieving high user satisfaction scores."
+
+---
+
+### 2. Fake News Detector
+
+**Skills**: NLP, TF-IDF, classification, text preprocessing
+
+Build a model that classifies news articles as real or fake.
+
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import PassiveAggressiveClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Load dataset (use LIAR or FakeNewsNet from Kaggle)
+# Preprocess text
+def preprocess(text):
+    text = text.lower()
+    # Remove special characters, extra whitespace
+    return text.strip()
+
+# Vectorize
+tfidf = TfidfVectorizer(
+    stop_words='english', 
+    max_df=0.7,
+    ngram_range=(1, 2)  # Unigrams and bigrams
+)
+X = tfidf.fit_transform(df['text'].apply(preprocess))
+
+# Train
+X_train, X_test, y_train, y_test = train_test_split(X, df['label'], test_size=0.2)
+model = PassiveAggressiveClassifier(max_iter=50)
+model.fit(X_train, y_train)
+
+# Evaluate
+acc = accuracy_score(y_test, model.predict(X_test))
+print(f"Accuracy: {acc:.2%}")
+```
+
+---
+
+### 3. Plant Disease Detection (Computer Vision)
+
+**Skills**: CNN, image classification, data augmentation
+
+Use the PlantVillage dataset (free on Kaggle) to build a model that identifies plant diseases from leaf images.
+
+This is a highly relevant project — agriculture is one of the biggest AI application areas in India.
+
+```python
+import tensorflow as tf
+from tensorflow.keras import layers, models
+
+def build_plant_disease_model(num_classes):
+    model = models.Sequential([
+        # Data augmentation
+        layers.RandomFlip('horizontal'),
+        layers.RandomRotation(0.2),
+        
+        # Convolutional base
+        layers.Conv2D(32, 3, activation='relu', input_shape=(224, 224, 3)),
+        layers.MaxPooling2D(),
+        layers.Conv2D(64, 3, activation='relu'),
+        layers.MaxPooling2D(),
+        layers.Conv2D(128, 3, activation='relu'),
+        layers.MaxPooling2D(),
+        
+        # Classifier
+        layers.Flatten(),
+        layers.Dense(256, activation='relu'),
+        layers.Dropout(0.5),
+        layers.Dense(num_classes, activation='softmax')
+    ])
+    
+    model.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    return model
+```
+
+---
+
+## Intermediate Projects (1–2 weeks each)
+
+### 4. Resume/Job Description Match Scorer
+
+**Skills**: NLP, embeddings, cosine similarity, Streamlit
+
+Build a tool that compares a resume against a job description and gives a match percentage. This directly helps job seekers.
+
+```python
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import streamlit as st
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+def calculate_match(resume_text: str, job_description: str) -> float:
+    embeddings = model.encode([resume_text, job_description])
+    similarity = cosine_similarity([embeddings[0]], [embeddings[1]])
+    return float(similarity[0][0]) * 100
+
+# Streamlit UI
+st.title("Resume-JD Match Scorer")
+resume = st.text_area("Paste your resume:")
+jd = st.text_area("Paste the job description:")
+
+if st.button("Calculate Match"):
+    score = calculate_match(resume, jd)
+    st.metric("Match Score", f"{score:.1f}%")
+    if score > 70:
+        st.success("Strong match! Good fit for this role.")
+    elif score > 50:
+        st.warning("Moderate match. Tailor your resume.")
+    else:
+        st.error("Low match. Consider developing missing skills.")
+```
+
+Deploy this on Streamlit Community Cloud for free.
+
+---
+
+### 5. AI-Powered Study Notes Generator
+
+**Skills**: LLM APIs, prompt engineering, PDF parsing, Streamlit
+
+Build a tool that reads a PDF (textbook, paper, lecture slides) and generates:
+- A summary
+- Key concepts
+- Practice questions
+
+```python
+import pdfplumber
+from openai import OpenAI
+import streamlit as st
+
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+def extract_text_from_pdf(uploaded_file) -> str:
+    text = ""
+    with pdfplumber.open(uploaded_file) as pdf:
+        for page in pdf.pages:
+            text += page.extract_text() or ""
+    return text[:4000]  # Stay within token limits
+
+def generate_study_notes(text: str) -> dict:
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{
+            "role": "user",
+            "content": f"""Analyse this educational content and provide:
+1. A concise summary (3-4 sentences)
+2. 5 key concepts with brief explanations
+3. 5 practice questions with answers
+
+Content:
+{text}"""
+        }]
+    )
+    return response.choices[0].message.content
+```
+
+---
+
+### 6. Stock Sentiment + Price Prediction
+
+**Skills**: Web scraping, NLP, time series, LSTM
+
+Combine news headline sentiment with historical stock prices to predict price direction. Use Yahoo Finance (free) for data.
+
+**Important note**: This project is for learning — not financial advice. Make this clear in your README.
+
+---
+
+### 7. Customer Support Chatbot (RAG)
+
+**Skills**: LLM, vector database, embeddings, RAG architecture
+
+Build a chatbot that answers questions about a specific domain (e.g., college FAQ, product manual) by retrieving relevant information first.
+
+```python
+from langchain.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import FAISS
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.chains import RetrievalQA
+from langchain.llms import Ollama  # Free, runs locally
+
+# 1. Load and split documents
+loader = PyPDFLoader("knowledge_base.pdf")
+docs = loader.load()
+splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+chunks = splitter.split_documents(docs)
+
+# 2. Create vector store (free, local)
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+vectorstore = FAISS.from_documents(chunks, embeddings)
+
+# 3. Create RAG chain
+llm = Ollama(model="llama3")  # Free, runs locally
+qa_chain = RetrievalQA.from_chain_type(llm, retriever=vectorstore.as_retriever())
+
+# 4. Answer questions
+answer = qa_chain.invoke("What documents do I need for hostel admission?")
+```
+
+This uses entirely free, local tools (no API costs).
+
+---
+
+## Advanced Projects (2–4 weeks)
+
+### 8. Image Caption Generator
+
+**Skills**: CNN + Transformer, attention mechanism, BLEU score evaluation
+
+Build a model that generates descriptive captions for images. Use MSCOCO dataset.
+
+### 9. Object Detection Web App
+
+**Skills**: YOLOv8, FastAPI, deployment, computer vision
+
+Use YOLOv8 (pre-trained, free) to detect objects in images uploaded via a web interface.
+
+```python
+from ultralytics import YOLO
+from fastapi import FastAPI, UploadFile
+from fastapi.responses import JSONResponse
+
+app = FastAPI()
+model = YOLO('yolov8n.pt')  # Download automatically, free
+
+@app.post("/detect")
+async def detect_objects(file: UploadFile):
+    contents = await file.read()
+    # Process image
+    results = model(contents)
+    detections = []
+    for result in results:
+        for box in result.boxes:
+            detections.append({
+                "class": result.names[int(box.cls)],
+                "confidence": float(box.conf),
+                "bbox": box.xyxy.tolist()[0]
+            })
+    return JSONResponse({"detections": detections})
+```
+
+### 10. AI Tutor for Competitive Exams
+
+**Skills**: Full-stack development, LLM, database, user management
+
+Build a complete AI tutoring platform that:
+- Lets users upload study material
+- Generates quizzes from the material
+- Tracks performance over time
+- Provides personalised weak-area recommendations
+
+This is a complex project that demonstrates full-stack + AI skills.
+
+---
+
+## How to Present Projects on Your Resume
+
+### GitHub README Must Include:
+- Problem statement (why this project matters)
+- Demo video or screenshots
+- How to install and run
+- Dataset source
+- Results and accuracy metrics
+- Technologies used
+
+### On Your Resume:
+```
+AI Projects
+───────────────────────────────────────────────────────
+Resume-JD Match Scorer  |  Python, NLP, Streamlit
+  Built a semantic similarity tool using sentence transformers that
+  scores resume-JD alignment. Deployed on Streamlit Cloud.
+  (github.com/yourname/resume-matcher) ★ 45 stars
+```
+
+Start with Project 1 or 2. Finish it completely. Publish it. Then move to the next.
+
+A portfolio of 5 well-documented projects is worth more than 50 incomplete ones.

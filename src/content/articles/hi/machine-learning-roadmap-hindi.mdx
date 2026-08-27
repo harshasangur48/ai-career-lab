@@ -1,0 +1,162 @@
+---
+title: "Machine Learning Roadmap 2026 — Beginners के लिए Complete Guide"
+description: "Machine Learning zero से job-ready तक सीखने का complete, step-by-step roadmap — हिंदी में।"
+slug: "machine-learning-roadmap-hindi"
+language: "hi"
+category: "ai-ml"
+tags: ["machine learning", "roadmap", "beginners", "AI career", "data science"]
+author: "Harsha"
+publishedAt: 2026-02-03
+featuredImage: "/images/articles/ml-roadmap.jpg"
+featuredImageAlt: "Machine Learning Learning Roadmap"
+readingTime: 11
+featured: false
+translationGroup: "ml-roadmap-001"
+---
+
+Machine Learning आज technology industry में सबसे ज़्यादा demand में है। लेकिन इतने सारे content के बीच, *क्या सीखें* और *किस order में* — यही सबसे मुश्किल है।
+
+यह roadmap वही problem solve करता है।
+
+## Phase 1: Foundation (महीना 1–2)
+
+### 1.1 Python Programming
+
+ML में सब कुछ Python में लिखा जाता है। इनमें comfortable होना ज़रूरी है:
+
+- Data types: strings, integers, floats, booleans
+- Data structures: lists, tuples, dictionaries, sets
+- Control flow: if/else, for loops, while loops
+- Functions और OOP basics
+
+**Goal**: बिना Google किए confidently Python programs लिखना।
+
+### 1.2 ML के लिए Mathematics
+
+**Linear Algebra**:
+- Vectors और matrices
+- Matrix multiplication
+- Dot products
+
+**Statistics & Probability**:
+- Mean, median, mode, standard deviation
+- Probability basics
+- Normal distribution
+
+**Calculus (Conceptual)**:
+- Derivative क्या होता है
+- Gradient descent — ML का core learning algorithm
+
+Exam के लिए नहीं — concepts समझने के लिए सीखें।
+
+## Phase 2: Core ML Concepts (महीना 3)
+
+### ML Workflow
+
+हर ML project इस pipeline को follow करता है:
+
+```
+Data Collection → Data Cleaning → Feature Engineering → 
+Model Selection → Training → Evaluation → Deployment
+```
+
+Data cleaning पर ज़्यादा ध्यान दें — real projects में 60–70% समय यहीं जाता है।
+
+### जानने लायक Algorithms
+
+**Regression** (number predict करने के लिए):
+- Linear Regression
+- Ridge & Lasso Regression
+
+**Classification** (category predict करने के लिए):
+- Logistic Regression
+- Decision Trees
+- Random Forests
+- Support Vector Machines (SVM)
+
+**Clustering** (unlabelled data group करने के लिए):
+- K-Means
+
+## Phase 3: Python ML Libraries (महीना 4)
+
+### NumPy
+
+```python
+import numpy as np
+
+arr = np.array([1, 2, 3, 4, 5])
+print(arr.mean(), arr.std(), arr.max())
+
+# Matrix multiplication (neural networks का आधार)
+A = np.random.randn(3, 4)
+B = np.random.randn(4, 5)
+C = np.dot(A, B)  # Result shape: (3, 5)
+```
+
+### Pandas
+
+```python
+import pandas as pd
+
+df = pd.read_csv('data.csv')
+print(df.head())
+print(df.describe())
+print(df.isnull().sum())
+
+# Missing values handle करें
+df['age'].fillna(df['age'].mean(), inplace=True)
+```
+
+### scikit-learn
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+model = RandomForestClassifier(n_estimators=100)
+model.fit(X_train, y_train)
+
+predictions = model.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, predictions):.2%}")
+```
+
+## Phase 4: Projects (महीना 4–5)
+
+इस order में projects बनाएं:
+
+1. **Iris Flower Classification** — classic beginner project
+2. **Titanic Survival Prediction** — data cleaning practice
+3. **House Price Prediction** — regression
+4. **Customer Churn Prediction** — business use case
+5. **Sentiment Analysis** — text classification
+
+हर project को GitHub पर README के साथ publish करें।
+
+## Phase 5: Deep Learning (महीना 5–6)
+
+Classical ML comfortable होने के बाद:
+
+- Neural Networks — कैसे काम करते हैं
+- Backpropagation — networks कैसे सीखते हैं
+- CNN — image data के लिए
+- RNN/LSTM — sequential data के लिए
+
+**TensorFlow/Keras** (beginners के लिए friendly) या **PyTorch** (industry standard) use करें।
+
+## Roadmap Summary
+
+```
+महीना 1:   Python + Maths
+महीना 2:   Core ML theory
+महीना 3:   NumPy, Pandas, Matplotlib
+महीना 4:   scikit-learn + 3 projects
+महीना 5:   Deep Learning basics
+महीना 6:   Specialisation + portfolio
+महीना 7+:  Job applications
+```
+
+यह roadmap एक guide है, कोई strict rule नहीं। अपने background के हिसाब से speed adjust करें।
+
+सबसे important बात — रुके नहीं, सीखते रहें।

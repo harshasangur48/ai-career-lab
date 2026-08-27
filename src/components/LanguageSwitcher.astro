@@ -1,0 +1,41 @@
+---
+import { locales, getLocaleUrl, getLocaleName, type Locales } from '../i18n/utils';
+
+interface Props {
+  lang: Locales;
+  currentPath?: string;
+  mobile?: boolean;
+}
+
+const { lang, currentPath = '/', mobile = false } = Astro.props;
+---
+
+<div class={`lang-switcher ${mobile ? 'lang-switcher--mobile' : ''}`} role="navigation" aria-label="Language selector">
+  {locales.map((locale) => (
+    <a
+      href={getLocaleUrl(locale, currentPath)}
+      class="lang-switcher__btn"
+      lang={locale}
+      hreflang={locale}
+      aria-current={locale === lang ? 'true' : undefined}
+      aria-label={`Switch to ${locale === 'en' ? 'English' : locale === 'kn' ? 'Kannada' : 'Hindi'}`}
+    >
+      {locale === 'en' ? 'EN' : locale === 'kn' ? 'ಕನ್ನಡ' : 'हिंदी'}
+    </a>
+  ))}
+</div>
+
+<style>
+  .lang-switcher--mobile {
+    width: 100%;
+    justify-content: center;
+    border-radius: var(--radius-xl);
+    padding: var(--space-2);
+  }
+  .lang-switcher--mobile .lang-switcher__btn {
+    flex: 1;
+    text-align: center;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { type Locales } from '../../i18n/utils';
+import { SITE } from '../../config/site';
+
+export async function getStaticPaths() {
+  return SITE.locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: Locales };
+---
+<BaseLayout title={`Disclaimer | ${SITE.name}`} description="Disclaimer for AI Career Lab — educational content, no professional advice." lang={lang} localePath="/disclaimer/">
+  <div class="container" style="max-width:var(--max-width-content);padding-top:var(--space-12);padding-bottom:var(--space-16);">
+    <h1>Disclaimer</h1>
+    <div class="prose">
+      <p>The information on <strong>{SITE.name}</strong> is provided for <strong>educational and informational purposes only</strong>.</p>
+      <h2>No Professional Advice</h2>
+      <p>Content on this website does not constitute professional career, legal, financial, or technical advice. Always verify information independently and consult qualified professionals for important decisions.</p>
+      <h2>AI/ML Information Accuracy</h2>
+      <p>The technology field evolves rapidly. While we strive to keep content updated, some information may become outdated. Always verify technical details with official documentation.</p>
+      <h2>Affiliate Relationships</h2>
+      <p>Some links may be affiliate links. See our <a href={`/${lang}/affiliate-disclosure/`}>Affiliate Disclosure</a> for details.</p>
+      <h2>External Links</h2>
+      <p>We are not responsible for the content or practices of external websites linked from this site.</p>
+    </div>
+  </div>
+</BaseLayout>

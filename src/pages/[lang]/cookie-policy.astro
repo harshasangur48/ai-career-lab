@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { type Locales } from '../../i18n/utils';
+import { SITE } from '../../config/site';
+
+export async function getStaticPaths() {
+  return SITE.locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: Locales };
+---
+<BaseLayout title={`Cookie Policy | ${SITE.name}`} description="Cookie Policy for AI Career Lab." lang={lang} localePath="/cookie-policy/">
+  <div class="container" style="max-width:var(--max-width-content);padding-top:var(--space-12);padding-bottom:var(--space-16);">
+    <h1>Cookie Policy</h1>
+    <div class="prose">
+      <h2>What Are Cookies?</h2>
+      <p>Cookies are small text files stored on your device by your web browser. We use cookies and localStorage to improve your experience on our website.</p>
+      <h2>Cookies We Use</h2>
+      <ul>
+        <li><strong>Theme preference</strong> (<code>localStorage: theme</code>): Stores your light/dark mode preference. This is essential for user experience.</li>
+        <li><strong>Analytics cookies</strong>: Google Analytics sets cookies to track anonymous usage. These can be disabled in your browser settings.</li>
+        <li><strong>Advertising cookies</strong>: If Google AdSense is enabled, it may set cookies for personalised advertising.</li>
+      </ul>
+      <h2>Managing Cookies</h2>
+      <p>You can control cookies through your browser settings. Disabling cookies may affect website functionality (e.g., your theme preference won't be remembered).</p>
+      <h2>Third-Party Cookies</h2>
+      <p>Google Analytics and Google AdSense may set their own cookies. Please refer to Google's privacy policy for details.</p>
+    </div>
+  </div>
+</BaseLayout>

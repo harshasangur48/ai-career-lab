@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { type Locales } from '../../i18n/utils';
+import { SITE } from '../../config/site';
+
+export async function getStaticPaths() {
+  return SITE.locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: Locales };
+---
+<BaseLayout title={`Terms & Conditions | ${SITE.name}`} description="Terms and Conditions for using AI Career Lab." lang={lang} localePath="/terms/">
+  <div class="container" style="max-width:var(--max-width-content);padding-top:var(--space-12);padding-bottom:var(--space-16);">
+    <h1>Terms &amp; Conditions</h1>
+    <p style="color:var(--color-text-subtle);margin-top:var(--space-2);margin-bottom:var(--space-8);">Last updated: January 2026</p>
+    <div class="prose">
+      <blockquote><strong>Note</strong>: This is a placeholder. Please review with a legal professional before production use.</blockquote>
+      <p>By accessing and using <strong>{SITE.name}</strong>, you agree to these Terms &amp; Conditions.</p>
+      <h2>Content</h2>
+      <p>All content on this website is for informational and educational purposes only. We do not guarantee the accuracy, completeness, or timeliness of any information.</p>
+      <h2>Intellectual Property</h2>
+      <p>All original content on this website is the property of {SITE.name}. You may share and reference our content with proper attribution.</p>
+      <h2>Disclaimer</h2>
+      <p>The information provided on this website is not professional advice. Career, financial, and technical decisions should be made with appropriate professional consultation.</p>
+      <h2>Changes</h2>
+      <p>We reserve the right to update these terms at any time. Continued use of the website constitutes acceptance of updated terms.</p>
+    </div>
+  </div>
+</BaseLayout>

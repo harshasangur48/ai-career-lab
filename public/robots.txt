@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Block crawling of duplicate content / internal paths
+Disallow: /api/
+Disallow: /_astro/
+
+Sitemap: https://aicareerlab.in/sitemap-index.xml

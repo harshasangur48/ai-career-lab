@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { type Locales } from '../../i18n/utils';
+import { SITE } from '../../config/site';
+
+export async function getStaticPaths() {
+  return SITE.locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: Locales };
+const siteUrl = SITE.domain;
+---
+
+<BaseLayout
+  title={`Privacy Policy | ${SITE.name}`}
+  description="Privacy Policy for AI Career Lab — how we collect, use, and protect your information."
+  lang={lang}
+  localePath="/privacy/"
+>
+  <div class="container" style="max-width: var(--max-width-content); padding-top: var(--space-12); padding-bottom: var(--space-16);">
+    <h1>Privacy Policy</h1>
+    <p style="color:var(--color-text-subtle);margin-top:var(--space-2);margin-bottom:var(--space-8);">Last updated: January 2026</p>
+
+    <div class="prose">
+      <p>
+        This Privacy Policy describes how <strong>{SITE.name}</strong> ("{siteUrl}") collects,
+        uses, and protects your personal information when you visit our website.
+      </p>
+
+      <blockquote>
+        <strong>Note</strong>: This is a placeholder privacy policy. Please review and update this with
+        specific legal advice before publishing to production, especially if you add advertising, analytics,
+        or newsletter subscriptions.
+      </blockquote>
+
+      <h2>Information We Collect</h2>
+      <p>We may collect the following types of information:</p>
+      <ul>
+        <li><strong>Usage data</strong>: Pages visited, time spent, browser type, device type (via analytics)</li>
+        <li><strong>Contact information</strong>: Email address if you subscribe to our newsletter or contact us</li>
+        <li><strong>Cookies</strong>: We use cookies for theme preference (light/dark) and analytics</li>
+      </ul>
+
+      <h2>How We Use Information</h2>
+      <ul>
+        <li>To provide and improve our content</li>
+        <li>To send newsletters (only if you explicitly subscribed)</li>
+        <li>To analyse traffic and improve user experience</li>
+        <li>To display relevant advertisements (if AdSense is enabled)</li>
+      </ul>
+
+      <h2>Third-Party Services</h2>
+      <p>We may use the following third-party services:</p>
+      <ul>
+        <li><strong>Google Analytics</strong>: Website traffic analysis</li>
+        <li><strong>Google AdSense</strong>: Advertising (when enabled)</li>
+        <li><strong>Email newsletter provider</strong>: Newsletter delivery (when configured)</li>
+      </ul>
+
+      <h2>Cookies</h2>
+      <p>
+        We use minimal cookies. The only first-party cookie we set is for your theme preference
+        (light/dark mode) stored in <code>localStorage</code>.
+      </p>
+
+      <h2>Your Rights</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li>Request access to your personal data</li>
+        <li>Request deletion of your data</li>
+        <li>Opt out of newsletter communications</li>
+        <li>Disable cookies through your browser settings</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>
+        For privacy-related questions, please use our <a href={`/${lang}/contact/`}>contact page</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

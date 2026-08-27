@@ -1,0 +1,115 @@
+---
+import { SITE, AUTHOR } from '../config/site';
+import type { Locales } from '../i18n/utils';
+
+interface Props {
+  type: 'website' | 'article';
+  title: string;
+  description: string;
+  url: string;
+  lang: Locales;
+  image?: string;
+  authorName?: string;
+  publishedAt?: Date;
+  updatedAt?: Date;
+  categoryName?: string;
+}
+
+const {
+  type,
+  title,
+  description,
+  url,
+  lang,
+  image,
+  authorName,
+  publishedAt,
+  updatedAt,
+  categoryName,
+} = Astro.props;
+
+const siteUrl = SITE.domain;
+const resolvedImage = image
+  ? (image.startsWith('http') ? image : `${siteUrl}${image}`)
+  : `${siteUrl}/images/og-default.jpg`;
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.name,
+  description: SITE.description,
+  url: siteUrl,
+  inLanguage: lang,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${siteUrl}/${lang}/search?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  url: siteUrl,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${siteUrl}/images/logo.png`,
+  },
+  sameAs: [
+    AUTHOR.social.twitter,
+    AUTHOR.social.linkedin,
+    AUTHOR.social.github,
+  ].filter(Boolean),
+};
+
+const personSchema = authorName ? {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: authorName,
+  url: `${siteUrl}/${lang}/author/${authorName.toLowerCase()}/`,
+  image: `${siteUrl}${AUTHOR.avatar}`,
+  sameAs: [
+    AUTHOR.social.twitter,
+    AUTHOR.social.linkedin,
+  ].filter(Boolean),
+} : null;
+
+const articleSchema = type === 'article' ? {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description: description,
+  url: url,
+  image: resolvedImage,
+  datePublished: publishedAt?.toISOString(),
+  dateModified: (updatedAt || publishedAt)?.toISOString(),
+  inLanguage: lang,
+  author: {
+    '@type': 'Person',
+    name: authorName || AUTHOR.name,
+    url: `${siteUrl}/${lang}/author/${(authorName || AUTHOR.name).toLowerCase()}/`,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.name,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${siteUrl}/images/logo.png`,
+    },
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': url,
+  },
+  articleSection: categoryName,
+} : null;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+{personSchema && <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />}
+{articleSchema && <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />}

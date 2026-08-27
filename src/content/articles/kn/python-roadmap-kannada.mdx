@@ -1,0 +1,105 @@
+---
+title: "2026ರಲ್ಲಿ AI/ML ಆರಂಭಿಕರಿಗಾಗಿ Python Roadmap — ಕನ್ನಡದಲ್ಲಿ"
+description: "AI ಮತ್ತು Machine Learning ಕಲಿಯಲು Python ನಲ್ಲಿ ಏನೇನು ಕಲಿಯಬೇಕು? ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಹಂತ-ಹಂತದ ಸಂಪೂರ್ಣ ಮಾಹಿತಿ."
+slug: "python-roadmap-kannada"
+language: "kn"
+category: "python"
+tags: ["Python", "AI", "machine learning", "ಕನ್ನಡ ಕಲಿಕೆ", "ರೋಡ್‌ಮ್ಯಾಪ್"]
+author: "Harsha"
+publishedAt: 2026-03-08
+featuredImage: "/images/articles/python-roadmap.jpg"
+featuredImageAlt: "Python Roadmap for AI/ML in Kannada"
+readingTime: 8
+featured: true
+translationGroup: "python-roadmap-001"
+---
+
+Python ಇಂದು ಜಗತ್ತಿನ ನಂಬರ್ 1 programming language ಆಗಿದೆ — ವಿಶೇಷವಾಗಿ Artificial Intelligence ಮತ್ತು Data Science ಕ್ಷೇತ್ರದಲ್ಲಿ.
+
+ಆದರೆ Python ನಲ್ಲಿ ಬಹಳಷ್ಟು ವಿಷಯಗಳಿವೆ. AI/ML ಕಲಿಯಲು ಎಲ್ಲವನ್ನೂ ಕಲಿಯುವ ಅಗತ್ಯವಿಲ್ಲ.
+
+ಈ ಮಾರ್ಗದರ್ಶಿಯಲ್ಲಿ **AI/ML ಗೆ ಎಷ್ಟು Python ಬೇಕೋ ಅಷ್ಟನ್ನು ಮಾತ್ರ** ಕಲಿಯುವುದು ಹೇಗೆ ಎಂದು ವಿವರಿಸಲಾಗಿದೆ.
+
+## ಹಂತ 1: Python ಮೂಲಭೂತ ವಿಷಯಗಳು (ವಾರ 1–3)
+
+ಮೊದಲು ಈ ಕೆಳಗಿನ ಮೂಲ ಪರಿಕಲ್ಪನೆಗಳನ್ನು ಕಲಿಯಿರಿ:
+
+```python
+# Variables & Data types
+name = "AI Career Lab"  # String
+year = 2026             # Integer
+is_active = True        # Boolean
+
+# Lists - ಡೇಟಾ ಸಂಗ್ರಹಿಸಲು
+skills = ["Python", "NumPy", "Pandas", "scikit-learn"]
+
+# Dictionary - ಕೀ-ಮೌಲ್ಯ ಜೋಡಿಗಳು
+student = {
+    "name": "ಕಾರ್ತಿಕ್",
+    "branch": "CSE",
+    "year": 3
+}
+print(student["name"])
+```
+
+### ಕಲಿಯಬೇಕಾದ ಪ್ರಮುಖ ವಿಷಯಗಳು:
+- Variables ಮತ್ತು Data Types
+- If / Else ಷರತ್ತುಗಳು ಮತ್ತು Loops (for, while)
+- Functions ಮತ್ತು Arguments
+- List Comprehensions
+
+## ಹಂತ 2: Data Science Libraries (ವಾರ 4–6)
+
+AI ಮತ್ತು ML ನಲ್ಲಿ ಡೇಟಾ ನಿರ್ವಹಿಸಲು ಮೂರು ಮುಖ್ಯ ಲೈಬ್ರರಿಗಳು ಬೇಕಾಗುತ್ತವೆ:
+
+### 1. NumPy (Numerical Python)
+ಮ್ಯಾಟ್ರಿಕ್ಸ್ ಮತ್ತು ಗಣಿತ ಲೆಕ್ಕಾಚಾರಗಳಿಗೆ ಅತ್ಯಂತ ವೇಗವಾದ ಲೈಬ್ರರಿ.
+
+```python
+import numpy as np
+
+# 2D Array (Matrix)
+matrix = np.array([[1, 2], [3, 4]])
+print(matrix.shape)  # (2, 2)
+```
+
+### 2. Pandas
+ಡೇಟಾ ಫೈಲ್‌ಗಳನ್ನು (CSV, Excel) ಓದಲು ಮತ್ತು ಸ್ವಚ್ಛಗೊಳಿಸಲು ಬಳಸಲಾಗುತ್ತದೆ.
+
+```python
+import pandas as pd
+
+# Data load
+df = pd.read_csv('students.csv')
+print(df.head())
+```
+
+### 3. Matplotlib & Seaborn
+ಡೇಟಾವನ್ನು ಗ್ರಾಫ್ ಮತ್ತು ಚಾರ್ಟ್ ರೂಪದಲ್ಲಿ ತೋರಿಸಲು (Data Visualization).
+
+## ಹಂತ 3: scikit-learn (Machine Learning) (ವಾರ 7–8)
+
+ನಿಮ್ಮ ಮೊದಲ ML model ತರಬೇತಿ ಮಾಡಲು scikit-learn ಬಳಸಿ:
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+# Data split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Model train
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+```
+
+## ಕಲಿಯುವ ವೇಳಾಪಟ್ಟಿ
+
+| ವಾರ | ವಿಷಯ | ಗುರಿ |
+|---|---|---|
+| ವಾರ 1-2 | Python Syntax & Data Types | ಚಿಕ್ಕ ಪ್ರೋಗ್ರಾಂ ಬರೆಯುವುದು |
+| ವಾರ 3-4 | Functions & OOP Basics | Logic ನಿರ್ಮಿಸುವುದು |
+| ವಾರ 5-6 | NumPy & Pandas | Data clean ಮಾಡುವುದು |
+| ವಾರ 7-8 | Matplotlib & scikit-learn | ಮೊದಲ ML Project |
+
+ಕೇವಲ ವಿಡಿಯೋ ನೋಡಬೇಡಿ — ಪ್ರತಿದಿನ ಕನಿಷ್ಠ 1 ಗಂಟೆ code ಮಾಡಿ.

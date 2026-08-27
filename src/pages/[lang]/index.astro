@@ -1,0 +1,107 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroSection from '../../components/HeroSection.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import CategoryGrid from '../../components/CategoryGrid.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { useTranslations, type Locales } from '../../i18n/utils';
+import { SITE } from '../../config/site';
+
+export async function getStaticPaths() {
+  return SITE.locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locales };
+const t = useTranslations(lang);
+
+// Fetch articles for this locale
+const allArticles = await getCollection('articles', (entry) =>
+  entry.data.language === lang && !entry.data.draft
+);
+
+// Sort by publishedAt descending
+const sortedArticles = allArticles.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+
+const featuredArticles = sortedArticles.filter((a) => a.data.featured);
+const latestArticles = sortedArticles.slice(0, 6);
+
+const title = lang === 'en'
+  ? `${SITE.name} — Learn AI, Python & Build Your Tech Career`
+  : lang === 'kn'
+  ? `${SITE.name} — AI ಕಲಿಯಿರಿ, Python ಕಲಿಯಿರಿ, ಕೆರಿಯರ್ ಬೆಳೆಸಿ`
+  : `${SITE.name} — AI सीखें, Python सीखें, करियर बनाएं`;
+
+const description = lang === 'en'
+  ? SITE.description
+  : lang === 'kn'
+  ? 'ವಿದ್ಯಾರ್ಥಿಗಳು ಮತ್ತು ಆಕಾಂಕ್ಷಿ developers ಗಾಗಿ AI, Python, ತಂತ್ರಜ್ಞಾನ ಮತ್ತು ಕೆರಿಯರ್ ಮಾರ್ಗದರ್ಶಿಗಳು.'
+  : 'छात्रों और नए developers के लिए AI, Python, Technology और करियर की practical गाइड्स।';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  lang={lang}
+  localePath="/"
+>
+  <HeroSection lang={lang} />
+
+  <!-- Header ad slot -->
+  <div class="container">
+    <AdSlot label={t('ad.label')} variant="leaderboard" />
+  </div>
+
+  <!-- Featured Articles -->
+  {featuredArticles.length > 0 && (
+    <section class="section" aria-labelledby="featured-title">
+      <div class="container">
+        <div class="section__header">
+          <h2 class="section__title" id="featured-title">{t('section.featured')}</h2>
+        </div>
+        <div class="cards-grid">
+          {featuredArticles.slice(0, 1).map((article) => (
+            <ArticleCard article={article} lang={lang} featured />
+          ))}
+          {featuredArticles.slice(1, 3).map((article) => (
+            <ArticleCard article={article} lang={lang} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Category Grid -->
+  <CategoryGrid lang={lang} />
+
+  <!-- Latest Articles -->
+  <section class="section" aria-labelledby="latest-title">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title" id="latest-title">{t('section.latest')}</h2>
+        <a href={`/${lang}/ai-ml/`} class="section__link">{t('section.viewAll')} →</a>
+      </div>
+      {latestArticles.length > 0 ? (
+        <div class="cards-grid">
+          {latestArticles.map((article) => (
+            <ArticleCard article={article} lang={lang} />
+          ))}
+        </div>
+      ) : (
+        <p style="color: var(--color-text-muted); text-align: center; padding: var(--space-12);">
+          {lang === 'kn' ? 'ಶೀಘ್ರದಲ್ಲೇ ಲೇಖನಗಳು ಬರುತ್ತವೆ...' : lang === 'hi' ? 'जल्द ही articles आएंगे...' : 'Articles coming soon...'}
+        </p>
+      )}
+    </div>
+  </section>
+
+  <!-- Newsletter CTA -->
+  <div class="container">
+    <NewsletterSignup lang={lang} variant="lead-magnet" />
+  </div>
+
+  <div style="padding-bottom: var(--space-8);" />
+</BaseLayout>

@@ -1,0 +1,128 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import NewsletterSignup from '../../../components/NewsletterSignup.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import { useTranslations, getLocaleUrl, getCategoryLabel, type Locales } from '../../../i18n/utils';
+import { SITE, CATEGORIES, type CategorySlug } from '../../../config/site';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of SITE.locales) {
+    for (const category of Object.keys(CATEGORIES)) {
+      paths.push({ params: { lang, category } });
+    }
+  }
+  return paths;
+}
+
+const { lang, category } = Astro.params as { lang: Locales; category: CategorySlug };
+const t = useTranslations(lang);
+
+const cat = CATEGORIES[category];
+if (!cat) return Astro.redirect('/404');
+
+// Get articles for this category + locale
+const articles = await getCollection('articles', (entry) =>
+  entry.data.language === lang &&
+  entry.data.category === category &&
+  !entry.data.draft
+);
+
+const sortedArticles = articles.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+
+const featuredArticle = sortedArticles.find((a) => a.data.featured) || sortedArticles[0];
+const restArticles = sortedArticles.filter((a) => a !== featuredArticle);
+
+const categoryLabel = getCategoryLabel(category, lang, t);
+const title = `${categoryLabel} | ${SITE.name}`;
+const description = cat.description;
+const localePath = `/${category}/`;
+
+const breadcrumbs = [
+  { label: t('breadcrumb.home'), href: getLocaleUrl(lang, '/') },
+  { label: categoryLabel, current: true },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  lang={lang}
+  localePath={localePath}
+>
+  <div class="container">
+    <Breadcrumbs items={breadcrumbs} lang={lang} />
+
+    <!-- Category header -->
+    <div style="padding: var(--space-8) 0 var(--space-10);">
+      <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4);">
+        <span style={`font-size: 3rem; display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;background:${cat.color}18;border-radius:var(--radius-xl);`} aria-hidden="true">
+          {cat.icon}
+        </span>
+        <div>
+          <h1 style="font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl)); font-weight: var(--font-extrabold); letter-spacing: -0.03em;">
+            {categoryLabel}
+          </h1>
+          <p style="color: var(--color-text-muted); margin-top: var(--space-2);">
+            {sortedArticles.length} {sortedArticles.length === 1 ? 'article' : 'articles'}
+          </p>
+        </div>
+      </div>
+      <p style="font-size: var(--text-lg); color: var(--color-text-muted); max-width: 48rem; line-height: var(--leading-relaxed);">
+        {description}
+      </p>
+    </div>
+
+    <!-- Ad slot -->
+    <AdSlot label={t('ad.label')} variant="leaderboard" />
+
+    <!-- Featured article -->
+    {featuredArticle && (
+      <section aria-labelledby="featured-label" style="margin-bottom: var(--space-10);">
+        <p id="featured-label" style="font-size: var(--text-xs); font-weight: var(--font-bold); text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-subtle); margin-bottom: var(--space-4);">
+          {t('section.featured')}
+        </p>
+        <ArticleCard article={featuredArticle} lang={lang} featured />
+      </section>
+    )}
+
+    <!-- All articles -->
+    {restArticles.length > 0 && (
+      <section aria-labelledby="all-articles-label">
+        <h2 id="all-articles-label" class="section__title" style="margin-bottom: var(--space-8);">
+          {t('section.latest')}
+        </h2>
+        <div class="cards-grid">
+          {restArticles.map((article) => (
+            <ArticleCard article={article} lang={lang} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {sortedArticles.length === 0 && (
+      <div style="text-align: center; padding: var(--space-20) 0;">
+        <p style="font-size: 4rem;" aria-hidden="true">📝</p>
+        <h2 style="margin: var(--space-4) 0 var(--space-3);">
+          {lang === 'kn' ? 'ಶೀಘ್ರದಲ್ಲೇ ಲೇಖನಗಳು ಬರುತ್ತವೆ' : lang === 'hi' ? 'जल्द ही articles आएंगे' : 'Articles coming soon'}
+        </h2>
+        <p style="color: var(--color-text-muted); margin-bottom: var(--space-8);">
+          {lang === 'kn' ? 'ನಾವು ಈ ವಿಭಾಗಕ್ಕೆ ಗುಣಮಟ್ಟದ content ಸಿದ್ಧಪಡಿಸುತ್ತಿದ್ದೇವೆ.' : lang === 'hi' ? 'हम इस category के लिए quality content तैयार कर रहे हैं।' : "We're preparing quality content for this category. Check back soon."}
+        </p>
+        <a href={getLocaleUrl(lang, '/')} class="btn btn--primary">
+          ← {lang === 'kn' ? 'ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ' : lang === 'hi' ? 'होमपेज पर जाएं' : 'Go to Homepage'}
+        </a>
+      </div>
+    )}
+
+    <!-- Newsletter -->
+    <div style="margin-top: var(--space-16);">
+      <NewsletterSignup lang={lang} />
+    </div>
+  </div>
+</BaseLayout>

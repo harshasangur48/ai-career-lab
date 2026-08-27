@@ -1,0 +1,162 @@
+---
+title: "2026ರಲ್ಲಿ Machine Learning Roadmap — ಆರಂಭಿಕರಿಗಾಗಿ"
+description: "Machine Learning ಶೂನ್ಯದಿಂದ job-ready ವರೆಗೆ ಕಲಿಯಲು ಸಂಪೂರ್ಣ, ಹಂತ-ಹಂತದ roadmap — ಕನ್ನಡದಲ್ಲಿ."
+slug: "machine-learning-roadmap-aaambikarige"
+language: "kn"
+category: "ai-ml"
+tags: ["machine learning", "roadmap", "ಆರಂಭಿಕರು", "AI ಕೆರಿಯರ್", "data science"]
+author: "Harsha"
+publishedAt: 2026-02-05
+featuredImage: "/images/articles/ml-roadmap.jpg"
+featuredImageAlt: "Machine Learning Roadmap"
+readingTime: 11
+featured: false
+translationGroup: "ml-roadmap-001"
+---
+
+Machine Learning ಇಂದು ತಂತ್ರಜ್ಞಾನ ಉದ್ಯಮದಲ್ಲಿ ಅತ್ಯಂತ ಬೇಡಿಕೆಯಿರುವ ಕೌಶಲ್ಯಗಳಲ್ಲೊಂದು. ಆದರೆ ಇಷ್ಟೊಂದು content ಲಭ್ಯವಿರುವಾಗ, *ಏನು ಕಲಿಯಬೇಕು* ಮತ್ತು *ಯಾವ ಕ್ರಮದಲ್ಲಿ* ಎಂದು ತಿಳಿಯುವುದೇ ಕಷ್ಟ.
+
+ಈ roadmap ಆ ಸಮಸ್ಯೆ ಪರಿಹರಿಸುತ್ತದೆ.
+
+## Phase 1: ಅಡಿಪಾಯ (ತಿಂಗಳು 1–2)
+
+### 1.1 Python Programming
+
+ML ನಲ್ಲಿ ಎಲ್ಲವೂ Python ನಲ್ಲಿ ಬರೆಯಲಾಗಿದೆ. ಇವುಗಳಲ್ಲಿ ನಿರರ್ಗಳವಾಗಿರಬೇಕು:
+
+- Data types: strings, integers, floats, booleans
+- Data structures: lists, tuples, dictionaries, sets
+- Control flow: if/else, for loops, while loops
+- Functions ಮತ್ತು OOP basics
+
+**ಗುರಿ**: ಮೂಲಭೂತ syntax ಬಗ್ಗೆ Google ಮಾಡದೆ Python programs ಬರೆಯಬಲ್ಲಿರಿ.
+
+### 1.2 ML ಗಾಗಿ Mathematics
+
+**Linear Algebra**:
+- Vectors ಮತ್ತು matrices
+- Matrix multiplication
+- Dot products
+
+**Statistics & Probability**:
+- Mean, median, mode, standard deviation
+- Probability basics
+- Normal distribution
+
+**Calculus (Conceptual)**:
+- Derivative ಎಂದರೇನು
+- Gradient descent — ML ನ ಮೂಲ learning algorithm
+
+## Phase 2: Core ML Concepts (ತಿಂಗಳು 3)
+
+### ML Workflow
+
+ಪ್ರತಿ ML project ಈ pipeline ಅನುಸರಿಸುತ್ತದೆ:
+
+```
+Data Collection → Data Cleaning → Feature Engineering → 
+Model Selection → Training → Evaluation → Deployment
+```
+
+Data cleaning ಮೇಲೆ ಹೆಚ್ಚು ಗಮನ ನೀಡಿ — real projects ನಲ್ಲಿ 60–70% ಸಮಯ ಇಲ್ಲಿಯೇ ಹೋಗುತ್ತದೆ.
+
+### ML ಬಗ್ಗೆ ತಿಳಿಯಬೇಕಾದ Algorithms
+
+**Regression** (ಸಂಖ್ಯೆ predict ಮಾಡಲು):
+- Linear Regression
+- Ridge & Lasso Regression
+
+**Classification** (ವರ್ಗ predict ಮಾಡಲು):
+- Logistic Regression
+- Decision Trees
+- Random Forests
+- Support Vector Machines
+
+**Clustering** (ಗುಂಪು ಮಾಡಲು):
+- K-Means
+- DBSCAN
+
+## Phase 3: Python ML Libraries (ತಿಂಗಳು 4)
+
+### NumPy
+
+```python
+import numpy as np
+
+arr = np.array([1, 2, 3, 4, 5])
+print(arr.mean(), arr.std(), arr.max())
+
+# Matrix multiplication
+A = np.random.randn(3, 4)
+B = np.random.randn(4, 5)
+C = np.dot(A, B)  # Result: (3, 5)
+```
+
+### Pandas — Data Manipulation
+
+```python
+import pandas as pd
+
+df = pd.read_csv('data.csv')
+print(df.head())
+print(df.describe())
+print(df.isnull().sum())
+
+# Missing values handle
+df = df.dropna()
+```
+
+### scikit-learn — Machine Learning
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+model = RandomForestClassifier(n_estimators=100)
+model.fit(X_train, y_train)
+
+predictions = model.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, predictions):.2%}")
+```
+
+## Phase 4: Projects (ತಿಂಗಳು 4–5)
+
+ಈ ಕ್ರಮದಲ್ಲಿ projects ನಿರ್ಮಿಸಿ:
+
+1. **Iris Flower Classification** — classic beginner project
+2. **Titanic Survival Prediction** — data cleaning practice
+3. **House Price Prediction** — regression
+4. **Customer Churn Prediction** — business use case
+5. **Sentiment Analysis** — text classification
+
+ಪ್ರತಿ project GitHub ನಲ್ಲಿ README ಸಹಿತ publish ಮಾಡಿ.
+
+## Phase 5: Deep Learning (ತಿಂಗಳು 5–6)
+
+Classical ML ನಲ್ಲಿ comfortable ಆದ ನಂತರ:
+
+- Neural Networks — ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತವೆ
+- Backpropagation — networks ಹೇಗೆ ಕಲಿಯುತ್ತವೆ
+- Activation Functions — ReLU, Sigmoid, Softmax
+- CNN — image data ಗಾಗಿ
+- RNN/LSTM — sequential data ಗಾಗಿ
+
+**TensorFlow/Keras** (beginners ಗೆ) ಅಥವಾ **PyTorch** (industry standard) ಬಳಸಿ.
+
+## Roadmap ಸಾರಾಂಶ
+
+```
+ತಿಂಗಳು 1:   Python + Maths
+ತಿಂಗಳು 2:   Core ML theory
+ತಿಂಗಳು 3:   NumPy, Pandas, Matplotlib
+ತಿಂಗಳು 4:   scikit-learn + 3 projects
+ತಿಂಗಳು 5:   Deep Learning basics
+ತಿಂಗಳು 6:   Specialisation + portfolio
+ತಿಂಗಳು 7+:  Job applications
+```
+
+ಈ roadmap ಒಂದು ಮಾರ್ಗದರ್ಶಿ, ಕಟ್ಟುನಿಟ್ಟಾದ ನಿಯಮ ಅಲ್ಲ. ನಿಮ್ಮ background ಮೇಲೆ ವೇಗ ಸರಿಹೊಂದಿಸಿ.
+
+ಮುಖ್ಯವಾದದ್ದು — ನಿಲ್ಲದೆ ಕಲಿಯಿರಿ.

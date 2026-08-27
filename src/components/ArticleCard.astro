@@ -1,0 +1,70 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { useTranslations, formatDate, getLocaleUrl, type Locales } from '../i18n/utils';
+import { CATEGORIES, type CategorySlug } from '../config/site';
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+  lang: Locales;
+  featured?: boolean;
+}
+
+const { article, lang, featured = false } = Astro.props;
+const t = useTranslations(lang);
+const { data } = article;
+const category = CATEGORIES[data.category as CategorySlug];
+const href = getLocaleUrl(lang, `/${data.category}/${data.slug}/`);
+const formattedDate = formatDate(data.publishedAt, lang);
+---
+
+<article class={`article-card${featured ? ' article-card--featured' : ''}`}>
+  <a
+    href={href}
+    class="article-card__image"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <img
+      src={data.featuredImage}
+      alt={data.featuredImageAlt || data.title}
+      width={featured ? 600 : 400}
+      height={featured ? 400 : 225}
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+
+  <div class="article-card__body">
+    <div class="article-card__meta">
+      <a
+        href={getLocaleUrl(lang, `/${data.category}/`)}
+        class={`category-badge category-badge--${data.category}`}
+      >
+        {category.icon} {category.labelShort}
+      </a>
+      <time datetime={data.publishedAt.toISOString()} class="article-card__date">
+        {formattedDate}
+      </time>
+    </div>
+
+    <h3 class="article-card__title">
+      <a href={href} style="text-decoration: none; color: inherit;">
+        {data.title}
+      </a>
+    </h3>
+
+    <p class="article-card__desc">{data.description}</p>
+
+    <div class="article-card__footer">
+      <span class="reading-time">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        {data.readingTime} {t('article.readingTime')}
+      </span>
+      <a href={href} class="section__link" aria-label={`Read: ${data.title}`}>
+        {t('section.readMore')} →
+      </a>
+    </div>
+  </div>
+</article>

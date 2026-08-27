@@ -1,0 +1,41 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  cta?: string;
+  description?: string;
+  trackingId?: string;
+  nofollow?: boolean;
+}
+
+const {
+  href,
+  label,
+  cta = 'Learn More',
+  description,
+  trackingId,
+  nofollow = true,
+} = Astro.props;
+
+const finalHref = trackingId ? `${href}${href.includes('?') ? '&' : '?'}ref=${trackingId}` : href;
+const relAttr = nofollow ? 'noopener noreferrer nofollow' : 'noopener noreferrer';
+---
+
+<div class="affiliate-block">
+  <p class="affiliate-disclosure">
+    ⚠️ Affiliate link — we may earn a small commission at no extra cost to you.
+  </p>
+  {description && <p style="font-size: var(--text-sm); margin-bottom: var(--space-4);">{description}</p>}
+  <a
+    href={finalHref}
+    class="affiliate-btn"
+    target="_blank"
+    rel={relAttr}
+    aria-label={`${cta} — ${label} (affiliate link)`}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+    </svg>
+    {cta} → {label}
+  </a>
+</div>

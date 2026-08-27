@@ -1,0 +1,92 @@
+---
+title: "AI और Machine Learning के लिए Python Roadmap 2026 — हिंदी में"
+description: "AI और Data Science सीखने के लिए Python के कौन से topics जरूरी हैं? Beginners और छात्रों के लिए step-by-step complete guide।"
+slug: "python-roadmap-hindi"
+language: "hi"
+category: "python"
+tags: ["Python", "AI", "machine learning", "roadmap", "हिंदी में सीखें"]
+author: "Harsha"
+publishedAt: 2026-03-09
+featuredImage: "/images/articles/python-roadmap.jpg"
+featuredImageAlt: "Python Roadmap in Hindi"
+readingTime: 8
+featured: true
+translationGroup: "python-roadmap-001"
+---
+
+Python आज Artificial Intelligence और Data Science के क्षेत्र में दुनिया की सबसे लोकप्रिय प्रोग्रामिंग भाषा है।
+
+लेकिन Python एक बहुत बड़ी भाषा है। AI/ML सीखने के लिए आपको सब कुछ सीखने की जरूरत नहीं है।
+
+इस गाइड में जानिए कि **AI/ML के लिए कितनी Python पर्याप्त है** और उसे किस क्रम में सीखें।
+
+## चरण 1: Python Fundamentals (हफ्ते 1–3)
+
+शुरुआत में इन core concepts को मजबूत करें:
+
+```python
+# Variables और Data Types
+name = "AI Career Lab"  # String
+year = 2026             # Integer
+is_active = True        # Boolean
+
+# Lists - Data संग्रह के लिए
+skills = ["Python", "NumPy", "Pandas", "scikit-learn"]
+
+# Dictionary - Key-Value जोड़े
+student = {
+    "name": "अमित",
+    "branch": "CSE",
+    "year": 3
+}
+print(student["name"])
+```
+
+### क्या-क्या सीखना है:
+- Variables, Data Types & Operators
+- If / Else Conditionals और Loops (for, while)
+- Functions और Arguments
+- List Comprehensions
+
+## चरण 2: Data Science Libraries (हफ्ते 4–6)
+
+Machine Learning में data को process करने के लिए 3 जरूरी libraries:
+
+### 1. NumPy
+गणितीय गणनाओं और matrix operations के लिए सबसे तेज library।
+
+```python
+import numpy as np
+matrix = np.array([[1, 2], [3, 4]])
+print(matrix.shape)
+```
+
+### 2. Pandas
+CSV/Excel files को load और clean करने के लिए।
+
+```python
+import pandas as pd
+df = pd.read_csv('students.csv')
+print(df.head())
+```
+
+### 3. Matplotlib & Seaborn
+Data को graphs और charts में visualize करने के लिए।
+
+## चरण 3: scikit-learn (Machine Learning) (हफ्ते 7–8)
+
+अपना पहला ML Model ट्रेन करें:
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+# Data split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Model train
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+```
+
+थ्योरी के साथ-साथ हर हफ्ते छोटे प्रोजेक्ट्स बनाएं।

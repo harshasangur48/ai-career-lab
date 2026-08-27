@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { type Locales } from '../../i18n/utils';
+import { SITE } from '../../config/site';
+
+export async function getStaticPaths() {
+  return SITE.locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: Locales };
+---
+
+<BaseLayout
+  title={`Affiliate Disclosure | ${SITE.name}`}
+  description="Affiliate disclosure for AI Career Lab — how we earn commissions from product recommendations."
+  lang={lang}
+  localePath="/affiliate-disclosure/"
+>
+  <div class="container" style="max-width: var(--max-width-content); padding-top: var(--space-12); padding-bottom: var(--space-16);">
+    <h1>Affiliate Disclosure</h1>
+    <p style="color:var(--color-text-subtle);margin-top:var(--space-2);margin-bottom:var(--space-8);">In compliance with FTC guidelines</p>
+    <div class="prose">
+      <p>
+        <strong>{SITE.name}</strong> participates in affiliate marketing programs. This means that
+        when you click certain links on our website and make a purchase, we may earn a small commission
+        at <strong>no additional cost to you</strong>.
+      </p>
+
+      <h2>How We Mark Affiliate Links</h2>
+      <p>
+        All affiliate links on our website are clearly labelled with a disclosure notice such as:
+        <em>"Affiliate link — we may earn a commission"</em>. We never hide affiliate relationships.
+      </p>
+
+      <h2>Our Principles</h2>
+      <ul>
+        <li>We only recommend products and services we genuinely believe are useful</li>
+        <li>Affiliate relationships never influence our editorial content</li>
+        <li>We do not write sponsored reviews without clear disclosure</li>
+        <li>All opinions are honest and our own</li>
+      </ul>
+
+      <h2>Programs We May Participate In</h2>
+      <ul>
+        <li>Amazon Associates</li>
+        <li>Coursera affiliate program</li>
+        <li>Udemy affiliate program</li>
+        <li>Various AI tool affiliate programs</li>
+      </ul>
+      <p>This list will be updated as we add or remove programs.</p>
+
+      <h2>Questions</h2>
+      <p>
+        If you have questions about our affiliate relationships, please <a href={`/${lang}/contact/`}>contact us</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

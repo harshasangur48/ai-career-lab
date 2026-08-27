@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+
+// Try to detect locale from URL
+const pathname = Astro.url.pathname;
+const lang = pathname.startsWith('/kn') ? 'kn' : pathname.startsWith('/hi') ? 'hi' : 'en';
+---
+
+<BaseLayout
+  title={`Page Not Found | ${SITE.name}`}
+  description="The page you're looking for doesn't exist."
+  lang={lang as 'en' | 'kn' | 'hi'}
+  noIndex={true}
+>
+  <div class="not-found container">
+    <div class="not-found__code" aria-hidden="true">404</div>
+    <h1 class="not-found__title">
+      {lang === 'kn' ? 'ಪುಟ ಕಂಡುಬರಲಿಲ್ಲ' : lang === 'hi' ? 'पेज नहीं मिला' : 'Page Not Found'}
+    </h1>
+    <p class="not-found__subtitle">
+      {lang === 'kn'
+        ? 'ನೀವು ಹುಡುಕುತ್ತಿರುವ ಪುಟ ಇಲ್ಲ ಅಥವಾ ಸ್ಥಳಾಂತರಗೊಂಡಿದೆ.'
+        : lang === 'hi'
+        ? 'जिस पेज को आप ढूंढ रहे हैं वह मौजूद नहीं है या बदल गया है।'
+        : "The page you're looking for doesn't exist or has been moved."}
+    </p>
+    <div style="display:flex;gap:var(--space-4);flex-wrap:wrap;justify-content:center;">
+      <a href={`/${lang}/`} class="btn btn--primary btn--lg">
+        ← {lang === 'kn' ? 'ಮುಖಪುಟ' : lang === 'hi' ? 'होमपेज' : 'Go to Homepage'}
+      </a>
+      <a href={`/${lang}/ai-ml/`} class="btn btn--secondary btn--lg">
+        {lang === 'kn' ? 'AI & ML ಲೇಖನಗಳು' : lang === 'hi' ? 'AI & ML Articles' : 'Browse AI & ML'}
+      </a>
+    </div>
+  </div>
+</BaseLayout>

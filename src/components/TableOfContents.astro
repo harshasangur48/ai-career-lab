@@ -1,0 +1,62 @@
+---
+import { useTranslations, type Locales } from '../i18n/utils';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+  lang: Locales;
+  mobile?: boolean;
+}
+
+const { headings, lang, mobile = false } = Astro.props;
+const t = useTranslations(lang);
+
+// Filter to only h2 and h3
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{mobile ? (
+  <div class="toc toc--mobile">
+    <details>
+      <summary class="toc__title">
+        {t('article.toc')}
+        <svg class="toc__toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+        </svg>
+      </summary>
+      <nav aria-label="Table of contents" style="margin-top: var(--space-3);">
+        <ol class="toc__list" role="list">
+          {tocHeadings.map((heading) => (
+            <li class={`toc__item toc__item--h${heading.depth}`}>
+              <a href={`#${heading.slug}`} class="toc__link">
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </details>
+  </div>
+) : (
+  <div class="toc">
+    <div class="toc__title">
+      <span>{t('article.toc')}</span>
+    </div>
+    <nav aria-label="Table of contents">
+      <ol class="toc__list" role="list">
+        {tocHeadings.map((heading) => (
+          <li class={`toc__item toc__item--h${heading.depth}`}>
+            <a href={`#${heading.slug}`} class="toc__link">
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </div>
+)}

@@ -1,0 +1,39 @@
+---
+import { ADSENSE } from '../config/site';
+
+interface Props {
+  label?: string;
+  variant?: 'leaderboard' | 'rectangle' | 'sidebar' | 'default';
+  style?: string;
+  slot?: string;
+}
+
+const { label = 'Advertisement', variant = 'default', style = '', slot: adSlot = 'auto' } = Astro.props;
+
+const slotClass = {
+  leaderboard: 'ad-slot--leaderboard',
+  rectangle: 'ad-slot--rectangle',
+  sidebar: 'ad-slot--sidebar',
+  default: '',
+}[variant];
+
+const showAds = ADSENSE.enabled && !!ADSENSE.publisherId;
+---
+
+{showAds ? (
+  <div class={`ad-slot ${slotClass}`} style={style} aria-label={label}>
+    <ins
+      class="adsbygoogle"
+      style="display:block"
+      data-ad-client={ADSENSE.publisherId}
+      data-ad-slot={adSlot}
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    />
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+) : (
+  <div class={`ad-slot ${slotClass}`} style={style} aria-label={label} role="complementary">
+    <span aria-hidden="true">{label}</span>
+  </div>
+)}
